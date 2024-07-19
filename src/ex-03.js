@@ -1,6 +1,54 @@
 import * as THREE from 'three';
 import { WEBGL } from './webgl';
 
+const colors = [
+  '#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#a0c4ff', '#bdb2ff', '#ffc6ff', '#ffcad4',
+  '#ff6666', '#ff9933', '#ffff66', '#99ff99', '#6699ff', '#9966ff', '#ff66ff', '#ff6699',
+  '#c93030', '#ec971f', '#8a8a2a', '#4cae4c', '#46b8da', '#5555aa', '#bb44bb', '#ac2925'
+];
+
+function createColorModal(colors) {
+  const modal = document.getElementById('colorModal');
+  modal.innerHTML = '';
+  colors.forEach(color => {
+    const swatch = document.createElement('div');
+    swatch.className = 'color-swatch';
+    swatch.style.backgroundColor = color;
+    swatch.addEventListener('click', () => selectColor(color));
+    modal.appendChild(swatch);
+  });
+}
+
+let selectedElement = null;
+
+function selectColor(color) {
+  if (selectedElement) {
+    selectedElement.style.backgroundColor = color;
+    const event = new Event('colorSelected');
+    selectedElement.dispatchEvent(event);
+    closeModal();
+  }
+}
+
+function openModal(element) {
+  selectedElement = element;
+  document.getElementById('colorModal').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('colorModal').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+}
+
+document.querySelectorAll('.color-button').forEach(button => {
+  button.addEventListener('click', () => openModal(button));
+});
+
+document.getElementById('overlay').addEventListener('click', closeModal);
+
+createColorModal(colors);
+
 if (WEBGL.isWebGLAvailable()) {
   // Scene
   const scene = new THREE.Scene();
@@ -129,16 +177,16 @@ if (WEBGL.isWebGLAvailable()) {
   window.addEventListener('resize', onWindowResize);
 
   // Color input handlers
-  document.getElementById('wall1Color').addEventListener('input', (event) => {
-    wallMaterial1.color.set(event.target.value);
+  document.getElementById('wall1Color').addEventListener('colorSelected', (event) => {
+    wallMaterial1.color.set(event.target.style.backgroundColor);
   });
 
-  document.getElementById('wall2Color').addEventListener('input', (event) => {
-    wallMaterial2.color.set(event.target.value);
+  document.getElementById('wall2Color').addEventListener('colorSelected', (event) => {
+    wallMaterial2.color.set(event.target.style.backgroundColor);
   });
 
-  document.getElementById('floorColor').addEventListener('input', (event) => {
-    floorMaterial.color.set(event.target.value);
+  document.getElementById('floorColor').addEventListener('colorSelected', (event) => {
+    floorMaterial.color.set(event.target.style.backgroundColor);
   });
 } else {
   var warning = WEBGL.getWebGLErrorMessage();
