@@ -4,7 +4,8 @@ import { WEBGL } from './webgl';
 const colors = [
   '#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#a0c4ff', '#bdb2ff', '#ffc6ff', '#ffcad4',
   '#ff6666', '#ff9933', '#ffff66', '#99ff99', '#6699ff', '#9966ff', '#ff66ff', '#ff6699',
-  '#c93030', '#ec971f', '#8a8a2a', '#4cae4c', '#46b8da', '#5555aa', '#bb44bb', '#ac2925'
+  '#c93030', '#ec971f', '#8a8a2a', '#4cae4c', '#46b8da', '#5555aa', '#bb44bb', '#ac2925',
+  '#f8f9fa', '#343a40'
 ];
 
 function createColorModal(colors) {
@@ -71,6 +72,16 @@ if (WEBGL.isWebGLAvailable()) {
   const pointLight = new THREE.PointLight(0xffffff, 1);
   pointLight.position.set(8, 10, 10);
   scene.add(pointLight);
+
+  // Warm light
+  const warmLight = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
+  warmLight.position.set(0, 5, 5); // Position the light
+  scene.add(warmLight);
+
+  // Additional warm light from above
+  const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
+  warmLightAbove.position.set(0, 10, 0); // Position the light above
+  scene.add(warmLightAbove);
 
   // Materials
   const wallMaterial1 = new THREE.MeshStandardMaterial({ color: 0x999999 });
