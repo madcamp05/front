@@ -24,20 +24,19 @@ if (WEBGL.isWebGLAvailable()) {
   pointLight.position.set(8, 10, 10);
   scene.add(pointLight);
 
-  // Four-sided room (four walls)
-  const wallMaterial1 = new THREE.MeshStandardMaterial({
-    color: 0x999999,
-  });
-  const wallMaterial2 = new THREE.MeshStandardMaterial({
-    color: 0x999999,
-  });
+  // Materials
+  const wallMaterial1 = new THREE.MeshStandardMaterial({ color: 0x999999 });
+  const wallMaterial2 = new THREE.MeshStandardMaterial({ color: 0x999999 });
   const floorMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     roughness: 1, // Reduce glossiness
   });
 
+  // Geometry
   const wallGeometry = new THREE.PlaneGeometry(10, 10); // Larger walls to cover more area
+  const floorGeometry = new THREE.PlaneGeometry(10, 10); // Larger floor to cover more area
 
+  // Walls
   const wall1 = new THREE.Mesh(wallGeometry, wallMaterial1);
   wall1.position.set(0, 0, -5); // Move back further
   scene.add(wall1);
@@ -58,11 +57,26 @@ if (WEBGL.isWebGLAvailable()) {
   scene.add(wall4);
 
   // Floor
-  const floorGeometry = new THREE.PlaneGeometry(10, 10); // Larger floor to cover more area
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -5; // Lower the floor
   scene.add(floor);
+
+  // Function to create grid lines on a plane
+  function createGrid(plane, rows, cols) {
+    const gridHelper = new THREE.GridHelper(10, rows, 0x000000, 0x000000);
+    gridHelper.rotation.x = Math.PI / 2;
+    plane.add(gridHelper);
+  }
+
+  // Create grid on wall1
+  createGrid(wall1, 10, 10);
+
+  // Create grid on wall2
+  createGrid(wall2, 10, 10);
+
+  // Create grid on floor
+  createGrid(floor, 10, 10);
 
   // Mouse control variables
   let mouseX = 0, mouseY = 0;
