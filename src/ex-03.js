@@ -121,6 +121,66 @@ if (WEBGL.isWebGLAvailable()) {
   floor.position.y = -5; // Lower the floor
   scene.add(floor);
 
+  // Furniture and decorations
+  const loader = new THREE.TextureLoader();
+  const texture = loader.load('/mnt/data/image.png'); // Load your image as a texture
+  const pictureGeometry = new THREE.PlaneGeometry(5, 5);
+  const pictureMaterial = new THREE.MeshBasicMaterial({ map: texture });
+  const picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+  picture.position.set(0, 2.5, -4.9);
+  scene.add(picture);
+
+  const chairGeometry = new THREE.BoxGeometry(1, 1, 1);
+  const chairMaterial = new THREE.MeshStandardMaterial({ color: 0x654321 });
+  const chair1 = new THREE.Mesh(chairGeometry, chairMaterial);
+  chair1.position.set(-2, -4.5, -2);
+  scene.add(chair1);
+
+  const chair2 = chair1.clone();
+  chair2.position.set(2, -4.5, -2);
+  scene.add(chair2);
+
+  const tableGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.2, 32);
+  const tableMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 });
+  const table = new THREE.Mesh(tableGeometry, tableMaterial);
+  table.position.set(0, -4.8, -2);
+  scene.add(table);
+
+  // Bookshelf
+  const bookshelfGeometry = new THREE.BoxGeometry(1, 3, 0.5);
+  const bookshelfMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+  const bookshelf = new THREE.Mesh(bookshelfGeometry, bookshelfMaterial);
+  bookshelf.position.set(-4, -3.5, -4);
+  scene.add(bookshelf);
+
+  // Desk
+  const deskGeometry = new THREE.BoxGeometry(2, 1, 1);
+  const deskMaterial = new THREE.MeshStandardMaterial({ color: 0xA0522D });
+  const desk = new THREE.Mesh(deskGeometry, deskMaterial);
+  desk.position.set(3, -4.5, -3);
+  scene.add(desk);
+
+  // Bed
+  const bedGeometry = new THREE.BoxGeometry(3, 1, 1.5);
+  const bedMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700 });
+  const bed = new THREE.Mesh(bedGeometry, bedMaterial);
+  bed.position.set(-2, -4.5, 3);
+  scene.add(bed);
+
+  // Lamp
+  const lampGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 32);
+  const lampBaseMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+  const lampShadeMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFE0 });
+
+  const lampBase = new THREE.Mesh(lampGeometry, lampBaseMaterial);
+  lampBase.position.set(2, -4, 3);
+  scene.add(lampBase);
+
+  const lampShadeGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.5, 32);
+  const lampShade = new THREE.Mesh(lampShadeGeometry, lampShadeMaterial);
+  lampShade.position.set(2, -3.25, 3);
+  scene.add(lampShade);
+
   // Function to create grid lines on a plane
   function createGrid(plane, rows, cols) {
     const gridHelper = new THREE.GridHelper(10, rows, 0x000000, 0x000000);
