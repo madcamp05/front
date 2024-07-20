@@ -2,7 +2,7 @@
   "name": "three-npm",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "ex-03.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start": "webpack-dev-server --mode development",
