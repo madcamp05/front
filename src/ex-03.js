@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { WEBGL } from './webgl';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const colors = [
   '#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#a0c4ff', '#bdb2ff', '#ffc6ff', '#ffcad4',
@@ -77,6 +78,24 @@ if (WEBGL.isWebGLAvailable()) {
   const warmLight = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
   warmLight.position.set(0, 5, 5); // Position the light
   scene.add(warmLight);
+
+  //GLTF loader
+  const loader = new GLTFLoader();
+  loader.load('public/assets/gltf/barstool.gltf', (gltf) => {
+    const model = gltf.scene;
+    model.scale.set(0.05, 0.05, 0.05);
+
+    model.position.set(0, -5, 0); // Position the model in the room
+    scene.add(model);
+    let ambientLight = new THREE.AmbientLight(0xffffff, 0.3);  // 색상과 강도
+    scene.add(ambientLight);
+    let dirLight = new THREE.DirectionalLight(0xffffff, 0.3);
+    dirLight.position.set(0, 5, 5);  // 위치 설정
+    // scene.add(dirLight);
+
+  }, undefined, (error) => {
+    console.error(error);
+  });
 
   // Additional warm light from above
   const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
