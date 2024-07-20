@@ -52,7 +52,6 @@ document.querySelectorAll('.color-button').forEach(button => {
 });
 
 document.getElementById('overlay').addEventListener('click', closeModal);
-
 createColorModal(colors);
 
 document.addEventListener('DOMContentLoaded', (event) => {
