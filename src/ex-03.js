@@ -148,13 +148,13 @@ if (WEBGL.isWebGLAvailable()) {
   }
 
   // Create grid on wall1
-  createGrid(wall1, 10, 10);
+  // createGrid(wall1, 10, 10);
 
   // Create grid on wall2
-  createGrid(wall2, 10, 10);
+  // createGrid(wall2, 10, 10);
 
   // Create grid on floor
-  createGrid(floor, 10, 10);
+  // createGrid(floor, 10, 10);
 
   // Mouse control variables
   let mouseX = 0, mouseY = 0;
