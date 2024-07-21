@@ -30,13 +30,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // House materials
     const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xcc0000 }); // Red roof
+    const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); 
 
     // House geometries
     const wallGeometry = new THREE.BoxGeometry(20, 10, 1);
     const sideWallGeometry = new THREE.BoxGeometry(1, 10, 20);
     const floorGeometry = new THREE.PlaneGeometry(20, 20);
-    const roofGeometry = new THREE.BoxGeometry(18, 1, 24); // Adjust width and height
+    const roofGeometry = new THREE.BoxGeometry(18, 1, 24);
+    const doorGeometry = new THREE.BoxGeometry(2.5, 5, 0.1);
+    const triangleShape = new THREE.Shape();
+    triangleShape.moveTo(0, 0);
+    triangleShape.lineTo(10, 5); // Adjust to fit the side of the roof
+    triangleShape.lineTo(0, 10);
+    triangleShape.lineTo(0, 0);
 
     // Walls
     const frontWall = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -66,11 +72,56 @@ document.addEventListener('DOMContentLoaded', (event) => {
     roofPart2.position.set(6, 14, 0); // Adjust position to start at the top of the house
     scene.add(roofPart2);
 
+    // Triangular sides
+    // const triangleLeft = new THREE.Mesh(triangleGeometry, roofMaterial);
+    // triangleLeft.rotation.y = Math.PI / 2;
+    // triangleLeft.position.set(-6, 14, 0); // Adjust position to fit between roof and house
+    // scene.add(triangleLeft);
+
+    // const triangleRight = new THREE.Mesh(triangleGeometry, roofMaterial);
+    // triangleRight.rotation.y = -Math.PI / 2;
+    // triangleRight.position.set(11, 14, 0); // Adjust position to fit between roof and house
+    // scene.add(triangleRight);
+
     // Floor
     const floor = new THREE.Mesh(floorGeometry, new THREE.MeshStandardMaterial({ color: 0x8b4513 }));
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = 0;
     scene.add(floor);
+
+    // Add door
+    const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    const door = new THREE.Mesh(doorGeometry, doorMaterial);
+    door.position.set(0, 3, 10.5); // Adjusted position to fit the front wall
+    scene.add(door);
+
+    // Door open/close logic
+    let doorOpen = false;
+    function toggleDoor() {
+      const doorRotationTarget = doorOpen ? 0 : Math.PI / 2;
+      doorOpen = !doorOpen;
+
+      new TWEEN.Tween(door.rotation)
+        .to({ y: doorRotationTarget }, 1000)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start();
+    }
+
+    // Event listener for door click
+    window.addEventListener('click', (event) => {
+      const mouse = new THREE.Vector2();
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+
+      const intersects = raycaster.intersectObjects([door]);
+
+      if (intersects.length > 0) {
+        toggleDoor();
+      }
+    });
 
     // Mouse control variables
     let mouseX = 0, mouseY = 0;
