@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { WEBGL } from './webgl';
+import { WEBGL } from '../webgl';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
-import { loadModels } from './loadModels';
+import { loadModels } from '../loadModels';
 // import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'; // 수정: OBJLoader 모듈 추가
 // import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';//
 
