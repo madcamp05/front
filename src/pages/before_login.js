@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
     const door = new THREE.Mesh(doorGeometry, doorMaterial);
     
-    // Create door group and adjust pivot point
+    // Create door group and adjust pivot pointtt
     const doorGroup = new THREE.Group();
     door.position.set(doorGeometry.parameters.width / 2, 0, 0); // Offset door to pivot around right edge
     doorGroup.add(door);
