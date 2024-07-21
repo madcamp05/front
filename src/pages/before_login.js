@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { WEBGL } from '../webgl';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import TWEEN from '@tweenjs/tween.js';
 
 document.addEventListener('DOMContentLoaded', (event) => {
   if (WEBGL.isWebGLAvailable()) {
@@ -30,13 +31,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // House materials
     const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xcc0000 }); // Red roof
+    const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
 
     // House geometries
     const wallGeometry = new THREE.BoxGeometry(20, 10, 1);
     const sideWallGeometry = new THREE.BoxGeometry(1, 10, 20);
     const floorGeometry = new THREE.PlaneGeometry(20, 20);
-    const roofGeometry = new THREE.BoxGeometry(18, 1, 24); // Adjust width and height
+    const roofGeometry = new THREE.BoxGeometry(18, 1, 24);
+    const doorGeometry = new THREE.BoxGeometry(2.5, 5, 0.1);
 
     // Walls
     const frontWall = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -70,21 +72,65 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const floor = new THREE.Mesh(floorGeometry, new THREE.MeshStandardMaterial({ color: 0x8b4513 }));
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = 0;
-    scene.add(floor);
+    scene.add(floor)
+
+    const behindDoorMaterial = new THREE.MeshStandardMaterial({ color: 0xfff7cc });
+    const behindDoor = new THREE.Mesh(doorGeometry, behindDoorMaterial);
+    behindDoor.position.set(0, 3, 10.5); // Adjusted position to be directly behind the door
+    scene.add(behindDoor);
+
+    // Add door
+    const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    const door = new THREE.Mesh(doorGeometry, doorMaterial);
+    
+    // Create door group and adjust pivot pointtt
+    const doorGroup = new THREE.Group();
+    door.position.set(doorGeometry.parameters.width / 2, 0, 0); // Offset door to pivot around right edge
+    doorGroup.add(door);
+    doorGroup.position.set(-1, 3, 10.6); // Set the door group position
+    scene.add(doorGroup);
+
+    // Door open/close logic
+    let doorOpen = false;
+    function toggleDoor() {
+      const doorRotationTarget = doorOpen ? 0 : -Math.PI / 2; // Change rotation direction to opposite
+      doorOpen = !doorOpen;
+
+      new TWEEN.Tween(doorGroup.rotation)
+        .to({ y: doorRotationTarget }, 1000)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .onComplete(() => {
+          if (doorOpen) {
+            window.location.href = 'login.js'; // Redirect to login.js
+          }
+        })
+        .start();
+    }
+
+    // Event listener for door click
+    window.addEventListener('click', (event) => {
+      const mouse = new THREE.Vector2();
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+
+      const intersects = raycaster.intersectObjects([door, behindDoor]);
+
+      if (intersects.length > 0) {
+        toggleDoor();
+      }
+    });
 
     // Mouse control variables
-    let mouseX = 0, mouseY = 0;
+    let mouseY = 0;
     let zoom = 1.5;
     const minZoom = 1.4; // Set the minimum zoom level
     const maxZoom = 2;
 
     document.addEventListener('mousemove', (event) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
       mouseY = -(event.clientY / window.innerHeight) * 4 + 2; // Increased vertical movement range
-
-      // Clamp mouseX to restrict rotation angle
-      const maxAngleX = 0.4; // Adjust this value to limit the rotation angle horizontally
-      mouseX = Math.max(Math.min(mouseX, maxAngleX), -maxAngleX);
 
       // Clamp mouseY to restrict vertical movement
       const maxAngleY = 2; // Increased this value to allow more vertical movement
@@ -102,12 +148,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
       // Update camera position based on mouse
       const cameraDistance = Math.sqrt(Math.pow(initialCameraPosition.x, 2) + Math.pow(initialCameraPosition.z, 2)) * zoom;
-      const angle = Math.atan2(initialCameraPosition.z, initialCameraPosition.x) + mouseX;
 
-      camera.position.x = cameraDistance * Math.cos(angle);
-      camera.position.z = cameraDistance * Math.sin(angle);
+      camera.position.x = initialCameraPosition.x; // Fix the horizontal position
+      camera.position.z = cameraDistance; // Fix the horizontal position
       camera.position.y = initialCameraPosition.y + mouseY * 3; // Allow more vertical movement
       camera.lookAt(0, 5, 0);
+
+      // Update TWEEN
+      TWEEN.update();
 
       renderer.render(scene, camera);
     }
