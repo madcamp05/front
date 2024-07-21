@@ -83,12 +83,25 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
     const door = new THREE.Mesh(doorGeometry, doorMaterial);
     
-    // Create door group and adjust pivot pointtt
+    // Create door group and adjust pivot point
     const doorGroup = new THREE.Group();
     door.position.set(doorGeometry.parameters.width / 2, 0, 0); // Offset door to pivot around right edge
     doorGroup.add(door);
     doorGroup.position.set(-1, 3, 10.6); // Set the door group position
     scene.add(doorGroup);
+
+    // Create house group to move entire house
+    const houseGroup = new THREE.Group();
+    houseGroup.add(frontWall);
+    houseGroup.add(backWall);
+    houseGroup.add(leftWall);
+    houseGroup.add(rightWall);
+    houseGroup.add(roofPart1);
+    houseGroup.add(roofPart2);
+    houseGroup.add(floor);
+    houseGroup.add(behindDoor);
+    houseGroup.add(doorGroup);
+    scene.add(houseGroup);
 
     // Door open/close logic
     let doorOpen = false;
@@ -101,7 +114,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         .easing(TWEEN.Easing.Quadratic.Out)
         .onComplete(() => {
           if (doorOpen) {
-            window.location.href = 'login.js'; // Redirect to login.js
+            new TWEEN.Tween(houseGroup.position)
+              .to({ x: houseGroup.position.x - 20 }, 1000)
+              .easing(TWEEN.Easing.Quadratic.Out)
+              .onComplete(() => {
+                document.getElementById('login-container').style.display = 'block';
+              })
+              .start();
           }
         })
         .start();
@@ -174,3 +193,111 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.body.appendChild(warning);
   }
 });
+
+// Create and style login form
+const loginContainer = document.createElement('div');
+loginContainer.id = 'login-container';
+loginContainer.style.display = 'none';
+loginContainer.style.position = 'absolute';
+loginContainer.style.top = '50%';
+loginContainer.style.right = '10%';
+loginContainer.style.transform = 'translateY(-50%)';
+loginContainer.style.width = '300px';
+loginContainer.style.padding = '20px';
+loginContainer.style.backgroundColor = '#fff';
+loginContainer.style.boxShadow = '0px 0px 10px rgba(0, 0, 0, 0.1)';
+loginContainer.style.borderRadius = '10px';
+loginContainer.style.zIndex = '1000';
+
+const loginTitle = document.createElement('h2');
+loginTitle.innerText = 'Login';
+loginTitle.style.textAlign = 'center';
+loginContainer.appendChild(loginTitle);
+
+const loginForm = document.createElement('form');
+
+const usernameLabel = document.createElement('label');
+usernameLabel.innerText = 'Username:';
+usernameLabel.style.display = 'block';
+usernameLabel.style.marginTop = '10px';
+loginForm.appendChild(usernameLabel);
+
+const usernameInput = document.createElement('input');
+usernameInput.type = 'text';
+usernameInput.style.width = '100%';
+usernameInput.style.padding = '10px';
+usernameInput.style.marginTop = '5px';
+usernameInput.style.boxSizing = 'border-box';
+usernameInput.required = true;
+loginForm.appendChild(usernameInput);
+
+const passwordLabel = document.createElement('label');
+passwordLabel.innerText = 'Password:';
+passwordLabel.style.display = 'block';
+passwordLabel.style.marginTop = '10px';
+loginForm.appendChild(passwordLabel);
+
+const passwordInput = document.createElement('input');
+passwordInput.type = 'password';
+passwordInput.style.width = '100%';
+passwordInput.style.padding = '10px';
+passwordInput.style.marginTop = '5px';
+passwordInput.style.boxSizing = 'border-box';
+passwordInput.required = true;
+loginForm.appendChild(passwordInput);
+
+const loginButton = document.createElement('button');
+loginButton.type = 'submit';
+loginButton.innerText = 'Login';
+loginButton.style.width = '100%';
+loginButton.style.padding = '10px';
+loginButton.style.marginTop = '20px';
+loginButton.style.backgroundColor = '#4CAF50';
+loginButton.style.color = '#fff';
+loginButton.style.border = 'none';
+loginButton.style.borderRadius = '5px';
+loginButton.style.cursor = 'pointer';
+loginForm.appendChild(loginButton);
+
+loginForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  
+  const username = usernameInput.value;
+  const password = passwordInput.value;
+
+  try {
+    const response = await fetch('http://34.45.235.80:3000/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    });
+
+    console.log("after fetching", username, password);
+    console.log("response", response);
+
+    if (response.ok) {
+      const data = await response.json();
+      const token = data.token;
+      
+      // Store the token in localStorage
+      localStorage.setItem('token', token);
+
+      alert('Login successful!');
+      document.getElementById('login-container').style.display = 'none';
+      
+      // Open the door
+      toggleDoor();
+      window.location.href = 'after_login.js';
+    } else {
+      const errorData = await response.json();
+      alert(`Error: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+});
+
+loginContainer.appendChild(loginForm);
+document.body.appendChild(loginContainer);
