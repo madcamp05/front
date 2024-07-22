@@ -1,0 +1,36 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 28.06.2022 11:49:32
+
+newmtl pointer_Mat
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 1.000000 1.000000 1.000000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka mdlwclock02_pointer_Mat_Diffuse.png
+	map_Kd mdlwclock02_pointer_Mat_Diffuse.png
+	map_Ks mdlwclock02_pointer_Mat_Specular.png
+	map_bump mdlwclock02_pointer_Mat_Normal.png
+	bump mdlwclock02_pointer_Mat_Normal.png
+
+newmtl symbol_Mat
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 1.000000 1.000000 1.000000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka mdlwclock02_symbol_Mat_Diffuse.png
+	map_Kd mdlwclock02_symbol_Mat_Diffuse.png
+	map_Ks mdlwclock02_symbol_Mat_Specular.png
+	map_bump mdlwclock02_symbol_Mat_Normal.png
+	bump mdlwclock02_symbol_Mat_Normal.png
