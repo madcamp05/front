@@ -1,20 +1,39 @@
-const path = require('path')
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: 'production',
-  entry: './src/pages/before_login.js',
+  mode: 'development', // 또는 'production'
+  entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
   },
-  performance: {
-    maxEntrypointSize: 1024000,
-    maxAssetSize: 1024000
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader'],
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
+  resolve: {
+    extensions: ['*', '.js', '.jsx'],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+    }),
+  ],
   devServer: {
-    publicPath: '/public/',
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
     compress: true,
     port: 9000,
-    hot: true,
   },
-}
+};
