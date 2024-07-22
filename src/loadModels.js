@@ -8,9 +8,9 @@ export function loadModels(scene, onAllModelsLoaded) {
     const objLoader = new OBJLoader();
 
     const models = [
-        { loader: gltfLoader, path: 'public/assets/gltf/barstool/barstool.gltf', scale: 0.05, position: { x: 0, y: -5, z: 0 } },
-        { loader: objLoader, path: 'public/assets/obj/cat/teatable.obj', scale: 0.05, position: { x: 0, y: -5, z: -6.5 }, rotation: { y: Math.PI / 2 } },
-        { loader: objLoader, path: 'public/assets/obj/imac/imac.obj', scale: 0.01, position: { x: 0, y: 3, z: 0 }, rotation: { y: Math.PI - 180 } },
+        { loader: gltfLoader, path: '/assets/gltf/barstool/barstool.gltf', scale: 0.05, position: { x: 0, y: -5, z: 0 } },
+        { loader: objLoader, path: '/assets/obj/cat/teatable.obj', scale: 0.05, position: { x: 0, y: -5, z: -6.5 }, rotation: { y: Math.PI / 2 } },
+        { loader: objLoader, path: '/assets/obj/imac/imac.obj', scale: 0.01, position: { x: 0, y: 3, z: 0 }, rotation: { y: Math.PI - 180 } },
         // 다른 모델을 추가하려면 여기 추가
         // { loader: gltfLoader, path: 'public/assets/gltf/other_model.gltf', scale: 0.05, position: { x: 2, y: -5, z: 2 } },
     ];
