@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { WEBGL } from '../webgl';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import TWEEN from '@tweenjs/tween.js';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const BeforeLogin = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (WEBGL.isWebGLAvailable()) {
@@ -30,7 +29,6 @@ const BeforeLogin = () => {
       light.position.set(10, 10, 10).normalize();
       scene.add(light);
 
-      // Additional light
       const ambientLight = new THREE.AmbientLight(0x404040);
       scene.add(ambientLight);
 
@@ -291,9 +289,8 @@ const BeforeLogin = () => {
           alert('Login successful!');
           document.getElementById('login-container').style.display = 'none';
 
-          // Open the door
-          toggleDoor();
-          history.push('/after'); // React Router를 사용하여 페이지 전환
+          console.log("Navigating to /room");
+          navigate('/room'); // React Router를 사용하여 페이지 전환
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`);

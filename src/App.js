@@ -1,15 +1,15 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import BeforeLogin from './BeforeLogin';
-import AfterLogin from './AfterLogin';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import BeforeLogin from './pages/before_login';
+import AfterLogin from './pages/after_login';
 
 const App = () => (
-  <div>
-    <Switch>
-      <Route exact path="/" component={BeforeLogin} />
-      <Route path="/room" component={AfterLogin} />
-    </Switch>
-  </div>
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<BeforeLogin />} />
+      <Route path="/room" element={<AfterLogin />} />
+    </Routes>
+  </BrowserRouter>
 );
 
 export default App;
