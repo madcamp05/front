@@ -30,6 +30,8 @@ module.exports = {
     }),
   ],
   devServer: {
+    historyApiFallback: true,
+    contentBase: path.join(__dirname, 'public'), // 정적 파일 제공 경로
     static: {
       directory: path.join(__dirname, 'public'),
     },

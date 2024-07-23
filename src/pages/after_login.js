@@ -3,14 +3,9 @@ import * as THREE from 'three';
 import { WEBGL } from '../webgl';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
-import { loadModels } from '../loadModels';
+import { loadModels } from '../loaders/loadModels';
 
-const colors = [
-  '#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#a0c4ff', '#bdb2ff', '#ffc6ff', '#ffcad4',
-  '#ff6666', '#ff9933', '#ffff66', '#99ff99', '#6699ff', '#9966ff', '#ff66ff', '#ff6699',
-  '#c93030', '#ec971f', '#8a8a2a', '#4cae4c', '#46b8da', '#5555aa', '#bb44bb', '#ac2925',
-  '#f8f9fa', '#343a40'
-];
+
 
 function createColorModal(colors) {
   const modal = document.getElementById('colorModal');
