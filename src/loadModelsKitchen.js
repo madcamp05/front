@@ -17,7 +17,6 @@ export function loadModelsKitchen(scene, onAllModelsLoaded) {
         { loader: objLoader, objPath: '/assets/obj/kitchen/fridge/fridge.obj', mtlPath: '/assets/obj/kitchen/fridge/fridge.mtl', scale: 0.5, position: { x: -5.8, y: -5, z: 5.2 }, rotation: { x: Math.PI / 2 - 3.14, z: Math.PI / 2 }},
         { loader: objLoader, objPath: '/assets/obj/kitchen/diningtable/diningtable.obj', mtlPath: '/assets/obj/kitchen/diningtable/diningtable.mtl', scale: 0.1, position: { x: 4, y: -5, z: 1 }, rotation: { x: 0, y: 1.57, z: 0 }},
         { loader: objLoader, objPath: '/assets/obj/kitchen/oven/oven.obj', mtlPath: '/assets/obj/kitchen/oven/oven.mtl', scale: 5.8, position: { x: -7.2, y: -6, z: -3 }, rotation: { x: 0, y: 1.57, z: 0 } },
-        // { loader: objLoader, objPath: '/assets/obj/bookshelf22/bookshelf22.obj', scale: 0.004, position: { x: -6.5, y: 5, z: -24 }, rotation: { x: Math.PI / 2 - 3.14, y: Math.PI, z: Math.PI + 1.57 } },
         { loader: objLoader, objPath: '/assets/obj/kitchen/kitchenclock/kitchenclock.obj', mtlPath: '/assets/obj/kitchen/kitchenclock/kitchenclock.mtl', scale: 0.1, position: { x: 1, y: 5, z: -7 }, rotation: { x: 0, y: Math.PI + 1.57, z: 1.57 }},
 
         // { loader: objLoader, path: 'public/assets/obj/floorlamp/floorlamp.obj', scale: 0.1, position: { x: -4, y: -5, z: -6.5 }, rotation: { y: Math.PI / 2 } },
