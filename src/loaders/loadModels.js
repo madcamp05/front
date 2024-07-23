@@ -17,9 +17,9 @@ export function loadModels(scene, onAllModelsLoaded) {
         { loader: objLoader, path: '/assets/obj/imac/imac.obj', scale: 0.005, position: { x: -0.5, y: -1, z: -6.5 } },
         { loader: objLoader, objPath: '/assets/obj/bed/bed.obj', mtlPath: '/assets/obj/bed/bed.mtl', scale: 0.1, position: { x: -3, y: -5, z: 5 }, rotation: { y: Math.PI / 2 } },
         { loader: objLoader, objPath: '/assets/obj/deertable/deertable.obj', mtlPath: '/assets/obj/deertable/deertable.mtl', scale: 0.0045, position: { x: 5, y: -5, z: -6 }, },
-        { loader: objLoader, objPath: '/assets/obj/bookshelf2/bookshelf2.obj', scale: 0.004, position: { x: -6.5, y: 5, z: -20 }, rotation: { x: Math.PI / 2 - 3.14, y: Math.PI, z: Math.PI + 1.57 } },
-        { loader: objLoader, objPath: '/assets/obj/bookshelf22/bookshelf22.obj', scale: 0.004, position: { x: -6.5, y: 5, z: -22 }, rotation: { x: Math.PI / 2 - 3.14, y: Math.PI, z: Math.PI + 1.57 } },
-        { loader: objLoader, objPath: '/assets/obj/bookshelf22/bookshelf22.obj', scale: 0.004, position: { x: -6.5, y: 5, z: -24 }, rotation: { x: Math.PI / 2 - 3.14, y: Math.PI, z: Math.PI + 1.57 } },
+        { loader: objLoader, objPath: '/assets/obj/bookshelf2/bookshelf2.obj', mtlPath: '/assets/obj/deertable/deertable.mtl', scale: 0.004, position: { x: -6.5, y: 5, z: -20 }, rotation: { x: Math.PI / 2 - 3.14, y: Math.PI, z: Math.PI + 1.57 } },
+        { loader: objLoader, objPath: '/assets/obj/bookshelf22/bookshelf22.obj', mtlPath: '/assets/obj/deertable/deertable.mtl', scale: 0.004, position: { x: -6.5, y: 5, z: -22 }, rotation: { x: Math.PI / 2 - 3.14, y: Math.PI, z: Math.PI + 1.57 } },
+        { loader: objLoader, objPath: '/assets/obj/bookshelf22/bookshelf22.obj', mtlPath: '/assets/obj/deertable/deertable.mtl', scale: 0.004, position: { x: -6.5, y: 5, z: -24 }, rotation: { x: Math.PI / 2 - 3.14, y: Math.PI, z: Math.PI + 1.57 } },
         { loader: objLoader, objPath: '/assets/obj/clock/normalclock/clock.obj', mtlPath: '/assets/obj/clock/normalclock/clock.mtl', scale: 0.02, position: { x: 0, y: 5, z: -7 }, },
 
         // { loader: objLoader, path: 'public/assets/obj/floorlamp/floorlamp.obj', scale: 0.1, position: { x: -4, y: -5, z: -6.5 }, rotation: { y: Math.PI / 2 } },

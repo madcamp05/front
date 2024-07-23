@@ -4,14 +4,16 @@ import BeforeLogin from './pages/before_login';
 import AfterLogin from './pages/after_login';
 import MyGameRoom from './pages/mygameroom';
 
+import MyKitchen from './pages/my_kitchen'
+
 const App = () => (
   <BrowserRouter>
     <Routes>
-      {/* <Route path="/" element={<MyGameRoom />} /> */}
       <Route path="/" element={<BeforeLogin />} />
-      {/* <Route path="/room" element={<AfterLogin />} /> */}
-      <Route path="/room" element={<MyGameRoom />} />
-      {/* <Route path="/gameroom" element={<MyGameRoom />} /> */}
+      <Route path="/room" element={<AfterLogin />} />
+      <Route path="/gameroom" element={<MyGameRoom />} />
+      <Route path="/kitchen" element={<MyKitchen />} />
+
     </Routes>
   </BrowserRouter>
 );

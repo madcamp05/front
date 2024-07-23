@@ -1,55 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { WEBGL } from '../webgl';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { loadModels } from '../loaders/loadModels';
 
-
-
-function createColorModal(colors) {
-  const modal = document.getElementById('colorModal');
-  modal.innerHTML = '';
-  colors.forEach(color => {
-    const swatch = document.createElement('div');
-    swatch.className = 'color-swatch';
-    swatch.style.backgroundColor = color;
-    swatch.addEventListener('click', () => selectColor(color));
-    modal.appendChild(swatch);
-  });
-}
-
-let selectedElement = null;
-
-function selectColor(color) {
-  if (selectedElement) {
-    selectedElement.style.backgroundColor = color;
-    const event = new Event('colorSelected');
-    selectedElement.dispatchEvent(event);
-    closeModal();
-  }
-}
-
-function openModal(element) {
-  selectedElement = element;
-  document.getElementById('colorModal').style.display = 'block';
-  document.getElementById('overlay').style.display = 'block';
-}
-
-function closeModal() {
-  document.getElementById('colorModal').style.display = 'none';
-  document.getElementById('overlay').style.display = 'none';
-}
-
 const AfterLogin = () => {
+  const containerRef = useRef();
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let selectedObject = null;
   useEffect(() => {
-    document.querySelectorAll('.color-button').forEach(button => {
-      button.addEventListener('click', () => openModal(button));
-    });
-
-    document.getElementById('overlay').addEventListener('click', closeModal);
-    createColorModal(colors);
-
     if (WEBGL.isWebGLAvailable()) {
       // Scene
       const scene = new THREE.Scene();
@@ -67,7 +28,8 @@ const AfterLogin = () => {
         alpha: true,
       });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      document.getElementById('webgl-container').appendChild(renderer.domElement);
+      const container = document.getElementById('webgl-container');
+      container.appendChild(renderer.domElement);
 
       // Light
       const pointLight = new THREE.PointLight(0xffffff, 0.9);
@@ -92,6 +54,26 @@ const AfterLogin = () => {
         camera.position.z = cameraDistance * Math.sin(angle);
         camera.position.y = initialCameraPosition.y + mouseY * 3;
         camera.lookAt(0, 0, 0);
+
+        // Perform raycasting to detect mouse hover
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+
+        // Remove highlight from previously selected object
+        if (selectedObject) {
+          selectedObject.material.emissive.setHex(selectedObject.currentHex);
+          selectedObject = null;
+        }
+
+        if (intersects.length > 0) {
+          const object = intersects[0].object;
+          if (object.isMesh) {
+            selectedObject = object;
+            selectedObject.currentHex = selectedObject.material.emissive.getHex();
+            selectedObject.material.emissive.setHex(0xff0000); // Highlight color
+          }
+        }
+
 
         renderer.render(scene, camera);
       }
@@ -145,9 +127,12 @@ const AfterLogin = () => {
       const minZoom = 1.4; // Set the minimum zoom level
       const maxZoom = 2;
 
-      document.addEventListener('mousemove', (event) => {
+      const mouseMoveHandler = (event) => {
         mouseX = (event.clientX / window.innerWidth) * 2 - 1;
         mouseY = -(event.clientY / window.innerHeight) * 4 + 2; // Increased vertical movement range
+        // Update mouse coordinates for raycaster
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         // Clamp mouseX to restrict rotation angle
         const maxAngleX = 0.4; // Adjust this value to limit the rotation angle horizontally
@@ -156,13 +141,16 @@ const AfterLogin = () => {
         // Clamp mouseY to restrict vertical movement
         const maxAngleY = 2; // Increased this value to allow more vertical movement
         mouseY = Math.max(Math.min(mouseY, maxAngleY), -maxAngleY);
-      });
+      };
 
-      document.addEventListener('wheel', (event) => {
+      const wheelHandler = (event) => {
         event.preventDefault(); // Prevent the default scroll behavior
         zoom += event.deltaY * 0.001; // Adjust zoom sensitivity as needed
         zoom = Math.min(Math.max(minZoom, zoom), maxZoom); // Limit zoom range, ensuring the camera doesn't get too close
-      });
+      };
+
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('wheel', wheelHandler);
 
       function render(time) {
         time *= 0.001; // convert time to seconds
@@ -189,42 +177,48 @@ const AfterLogin = () => {
       }
       window.addEventListener('resize', onWindowResize);
 
-      // Color input handlers
-      document.getElementById('wall1Color').addEventListener('colorSelected', (event) => {
-        wallMaterial1.color.set(event.target.style.backgroundColor);
-      })
+      // Mouse hover effect
+      const onMouseMove = (event) => {
+        // Update mouse coordinates
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      document.getElementById('wall2Color').addEventListener('colorSelected', (event) => {
-        wallMaterial2.color.set(event.target.style.backgroundColor);
-      });
+        // Perform raycasting
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
 
-      document.getElementById('floorColor').addEventListener('colorSelected', (event) => {
-        floorMaterial.color.set(event.target.style.backgroundColor);
-      });
+        // Remove highlight from previously selected object
+        if (selectedObject) {
+          selectedObject.material.emissive.setHex(selectedObject.currentHex);
+          selectedObject = null;
+        }
+
+        if (intersects.length > 0) {
+          const object = intersects[0].object;
+          if (object.isMesh) {
+            selectedObject = object;
+            selectedObject.currentHex = selectedObject.material.emissive.getHex();
+            selectedObject.material.emissive.setHex(0xff0000); // Highlight color
+          }
+        }
+      };
+
+      // Cleanup on component unmount
+      return () => {
+        container.removeChild(renderer.domElement);
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('wheel', wheelHandler);
+        window.removeEventListener('resize', onWindowResize);
+      };
     } else {
       const warning = WEBGL.getWebGLErrorMessage();
       document.body.appendChild(warning);
     }
-
-    // Cleanup on component unmount
-    return () => {
-      document.querySelectorAll('.color-button').forEach(button => {
-        button.removeEventListener('click', () => openModal(button));
-      });
-      document.getElementById('overlay').removeEventListener('click', closeModal);
-    };
   }, []);
 
   return (
     <div>
       <div id="webgl-container"></div>
-      <div id="colorModal" className="color-modal"></div>
-      <div id="overlay" className="overlay"></div>
-      <div className="controls">
-        <button id="wall1Color" className="color-button">Change Wall 1 Color</button>
-        <button id="wall2Color" className="color-button">Change Wall 2 Color</button>
-        <button id="floorColor" className="color-button">Change Floor Color</button>
-      </div>
     </div>
   );
 };

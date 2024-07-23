@@ -24,6 +24,8 @@ export function loadModels(scene, onAllModelsLoaded) {
         { type: 'obj', objPath: '/assets/obj/gameroom/walllamp/moon.obj', mtlPath: '/assets/obj/gameroom/walllamp/moon.mtl', scale: 15, position: { x: -1, y: 3, z: -7.2 }, },//texture 합치기
         // { type: 'obj', objPath: '/assets/obj/gameroom/chips/chips.obj', mtlPath: '/assets/obj/gameroom/chips/chips.mtl', scale: 10, position: { x: 1, y: -5.5, z: 3.4 }, rotation: { y: Math.PI / 2 + 1.77, z: Math.PI + 2.17, } },
 
+        { loader: gltfLoader, path: '/assets/obj/gameroom/fan/fan.gltf', scale: 4, position: { x: 1, y: -5, z: -5.5 }, rotation: { y: -0.97 } },
+
     ];
 
     let loadedModels = 0;

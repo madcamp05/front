@@ -293,7 +293,7 @@ const BeforeLogin = () => {
           navigate('/room'); // React Router를 사용하여 페이지 전환
         } else {
           const errorData = await response.json();
-          alert(`Error: ${errorData.message}`);
+          alert(`Error: ${errorData.message}`); s
         }
       } catch (error) {
         console.error('Fetch error:', error);
