@@ -16,7 +16,7 @@
     "@babel/preset-env": "^7.24.8",
     "@babel/preset-react": "^7.24.7",
     "@react-three/cannon": "^6.6.0",
-    "@react-three/drei": "^9.109.1",
+    "@react-three/drei": "^9.109.2",
     "@react-three/fiber": "^8.16.8",
     "@tweenjs/tween.js": "^23.1.2",
     "@use-gesture/react": "^10.3.1",
