@@ -60,12 +60,22 @@ const MyKitchen = () => {
           console.log('Selected object:', selectedObject.name); // Debug statement
           if (selectedObject.name === 'Cabinet1_Door.001') {
             console.log("selectedObject.name == Cabinet1_Door.001");
-            animateCameraToObject(selectedObject);
+            animateCameraToObject(selectedObject, '/kitchen/sink');
+          } else if (selectedObject.name === 'Box002') {
+            animateCameraToObject(selectedObject, '/kitchen/fridge'); // Navigate to /kitchen/fridge for Box002
+          } else if (selectedObject.name === 'Counter_Plane') {
+            animateCameraToObject(selectedObject, '/kitchen/oven'); // Navigate to /kitchen/fridge for Box002
+          } else if (selectedObject.name === 'Group_002' ||
+            selectedObject.name === 'Group_006' ||
+            selectedObject.name === 'Group_008' ||
+            selectedObject.name === 'Group_005' ||
+            selectedObject.name === 'Group_003') {
+            animateCameraToObject(selectedObject, '/kitchen/table'); // Navigate to /kitchen/table for specified groups
           }
         }
       }
 
-      function animateCameraToObject(object) {
+      function animateCameraToObject(object, navigateTo) {
         const targetPosition = new THREE.Vector3().copy(object.position);
         targetPosition.y += 2; // Adjust this value as needed for better zoom
         const startPosition = new THREE.Vector3().copy(camera.position);
@@ -88,7 +98,7 @@ const MyKitchen = () => {
 
           if (progress < 1) {
             requestAnimationFrame(animate);
-          } else {
+          } else if (navigateTo) {
             // Wait for 5 seconds before navigating
             setTimeout(() => {
               navigate('/myroom_effects/sink');
