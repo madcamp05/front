@@ -7,6 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    publicPath: '/', // 모든 파일의 기본 경로를 설정
   },
   module: {
     rules: [

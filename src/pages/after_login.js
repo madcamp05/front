@@ -10,19 +10,20 @@ const AfterLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let renderer, scene, camera, animate;
     if (WEBGL.isWebGLAvailable()) {
       // Scene
-      const scene = new THREE.Scene();
+      scene = new THREE.Scene();
       scene.background = new THREE.Color(0xeeeeee);
 
       // Camera
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
       const initialCameraPosition = { x: 10, y: 7, z: 10 };
       camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
       camera.lookAt(0, 0, 0);
 
       // Renderer
-      const renderer = new THREE.WebGLRenderer({
+      renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true,
       });
@@ -97,7 +98,7 @@ const AfterLogin = () => {
           } else {
             // Wait for 5 seconds before navigating
             setTimeout(() => {
-              navigate('/myroom_effects/imac');
+              navigate('/myroom/bed');
             }, 100);
           }
         }
@@ -110,7 +111,7 @@ const AfterLogin = () => {
 
 
 
-      function animate() {
+      animate = function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
       }
@@ -203,6 +204,18 @@ const AfterLogin = () => {
       const warning = WEBGL.getWebGLErrorMessage();
       document.body.appendChild(warning);
     }
+    return () => {
+      // Clean up Three.js resources and DOM elements
+      if (renderer) {
+        renderer.dispose();
+        const container = document.getElementById('webgl-container');
+        // if (container && renderer.domElement) {
+        //   container.removeChild(renderer.domElement);
+        // }
+      }
+      // window.removeEventListener('resize', onWindowResize);
+      // document.removeEventListener('click', onMouseClick);
+    };
   }, []);
 
   return (
