@@ -19,6 +19,17 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(gltf|glb)$/, // GLTF, GLB 파일 로더 추가
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'assets/models',
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {

@@ -91,7 +91,7 @@ const MyKitchen = () => {
           } else {
             // Wait for 5 seconds before navigating
             setTimeout(() => {
-              navigate('/kitchen/sink');
+              navigate('/myroom_effects/sink');
             }, 100);
           }
         }
