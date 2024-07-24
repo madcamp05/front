@@ -63,8 +63,16 @@ const MyKitchen = () => {
             animateCameraToObject(selectedObject, '/kitchen/sink');
           } else if (selectedObject.name === 'Box002') {
             animateCameraToObject(selectedObject, '/kitchen/fridge'); // Navigate to /kitchen/fridge for Box002
+          } else if (selectedObject.name === 'Counter_Plane') {
+            animateCameraToObject(selectedObject, '/kitchen/oven'); // Navigate to /kitchen/fridge for Box002
+          } else if (selectedObject.name === 'Group_002' ||
+          selectedObject.name === 'Group_006' ||
+          selectedObject.name === 'Group_008' ||
+          selectedObject.name === 'Group_005' ||
+          selectedObject.name === 'Group_003') {
+            animateCameraToObject(selectedObject, '/kitchen/table'); // Navigate to /kitchen/table for specified groups
           }
-        }
+        } 
       }
 
       function animateCameraToObject(object, navigateTo) {
