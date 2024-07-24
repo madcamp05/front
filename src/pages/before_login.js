@@ -8,13 +8,14 @@ const BeforeLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let renderer, scene, camera, houseGroup, doorGroup, animate;
     if (WEBGL.isWebGLAvailable()) {
       // Scene
-      const scene = new THREE.Scene();
+      scene = new THREE.Scene();
       scene.background = new THREE.Color(0xeeeeee);
 
       // Camera
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
       const initialCameraPosition = { x: 20, y: 15, z: 20 };
       camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
       camera.lookAt(0, 5, 0);
@@ -87,14 +88,14 @@ const BeforeLogin = () => {
       const door = new THREE.Mesh(doorGeometry, doorMaterial);
 
       // Create door group and adjust pivot point
-      const doorGroup = new THREE.Group();
+      doorGroup = new THREE.Group();
       door.position.set(doorGeometry.parameters.width / 2, 0, 0); // Offset door to pivot around right edge
       doorGroup.add(door);
       doorGroup.position.set(-1, 3, 10.6); // Set the door group position
       scene.add(doorGroup);
 
       // Create house group to move entire house
-      const houseGroup = new THREE.Group();
+      houseGroup = new THREE.Group();
       houseGroup.add(frontWall);
       houseGroup.add(backWall);
       houseGroup.add(leftWall);
@@ -165,7 +166,7 @@ const BeforeLogin = () => {
         zoom = Math.min(Math.max(minZoom, zoom), maxZoom); // Limit zoom range, ensuring the camera doesn't get too close
       });
 
-      function animate() {
+      animate = function animate() {
         requestAnimationFrame(animate);
 
         // Update camera position based on mouse
@@ -289,8 +290,8 @@ const BeforeLogin = () => {
           alert('Login successful!');
           document.getElementById('login-container').style.display = 'none';
 
-          console.log("Navigating to /room");
-          navigate('/room'); // React Router를 사용하여 페이지 전환
+          console.log("Navigating to /myroom");
+          navigate('/myroom'); // React Router를 사용하여 페이지 전환
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`); s
@@ -302,7 +303,21 @@ const BeforeLogin = () => {
 
     loginContainer.appendChild(loginForm);
     document.body.appendChild(loginContainer);
+
+
+    return () => {
+      // Clean up Three.js resources and DOM elements
+      if (renderer) {
+        renderer.dispose();
+        // document.getElementById('webgl-container').removeChild(renderer.domElement);
+      }
+      // window.removeEventListener('resize', onWindowResize);
+      // window.removeEventListener('click', toggleDoor);
+    };
+
   }, []);
+
+
 
   return <div id="webgl-container"></div>;
 };

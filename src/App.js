@@ -18,13 +18,17 @@ import MiniGame from './pages/gameroom/minigame';
 const App = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/ori" element={<BeforeLogin />} />
+      <Route path="/" element={<BeforeLogin />} />
       {/* <Route path="/" element={<BeforeLogin />} /> */}
       {/* <Route path="/" element={<AfterLogin />} /> */}
-      <Route path="room" element={<MyGameRoom />} />
-      {/* <Route path="/" element={<MyKitchen />} /> */}
+      <Route path="/gameroom" element={<MyGameRoom />} />
+      <Route path="/kitchen" element={<MyKitchen />} />
+      <Route path="/myroom" element={<AfterLogin />} />
 
-      <Route path="/" element={<MiniGame />} />
+      <Route path="/gameroom/minigame" element={<MiniGame />} />
+      <Route path="/myroom/imac" element={<IMacCanvas />} />
+      <Route path="/myroom/bed" element={<MyBed />} />
+
     </Routes>
   </BrowserRouter>
 );
