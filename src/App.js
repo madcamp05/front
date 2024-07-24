@@ -14,16 +14,18 @@ import MyTable from './pages/kitchen/my_table';
 import MyFridge from './pages/kitchen/my_fridge';
 import MyOven from './pages/kitchen/my_oven';
 import BookshelfScene from './pages/myroom/bookshelf';
+import FanScene from './pages/gameroom/fan';
 
 const App = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/ori" element={<BeforeLogin />} />
       <Route path="/room" element={<AfterLogin />} /> 
-      <Route path="/" element={<BookshelfScene />} /> 
+      <Route path="/room/bookshelf" element={<BookshelfScene />} /> 
 
       <Route path="/game" element={<MyGameRoom />} />
       <Route path="/game/light" element={<BananaLight />} />
+      <Route path="/" element={<FanScene />} />
 
       <Route path="/kitchen" element={<MyKitchen />} />
       <Route path="/kitchen/sink" element={<MySink />} />
