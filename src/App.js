@@ -15,17 +15,23 @@ import MyFridge from './pages/kitchen/my_fridge';
 import MyOven from './pages/kitchen/my_oven';
 import BookshelfScene from './pages/myroom/bookshelf';
 import FanScene from './pages/gameroom/fan';
+import Clock from './pages/clock';
+import Bed from './pages/myroom/bed';
 
 const App = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/ori" element={<BeforeLogin />} />
+      <Route path="/" element={<BeforeLogin />} />
+
+      <Route path="/clock" element={<Clock />} /> 
+
       <Route path="/room" element={<AfterLogin />} /> 
       <Route path="/room/bookshelf" element={<BookshelfScene />} /> 
+      <Route path="/room/bed" element={<Bed />} /> 
 
       <Route path="/game" element={<MyGameRoom />} />
       <Route path="/game/light" element={<BananaLight />} />
-      <Route path="/" element={<FanScene />} />
+      <Route path="/game/fan" element={<FanScene />} />
 
       <Route path="/kitchen" element={<MyKitchen />} />
       <Route path="/kitchen/sink" element={<MySink />} />
