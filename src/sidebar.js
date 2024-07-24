@@ -1,13 +1,16 @@
-// Sidebar.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Sidebar = () => (
-  <div className="sidebar">
-    {/* Your 3D buttons */}
-    <button>Button 1</button>
-    <button>Button 2</button>
-    <button>Button 3</button>
-  </div>
-);
+const Sidebar = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="sidebar">
+      <button onClick={() => navigate('/room')}>Bed Room</button>
+      <button onClick={() => navigate('/kitchen')}>Kitchen</button>
+      <button onClick={() => navigate('/game')}>Game Room</button>
+    </div>
+  );
+};
 
 export default Sidebar;

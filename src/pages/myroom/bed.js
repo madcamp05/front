@@ -124,7 +124,9 @@ const Bed = () => {
         // Cleanup on component unmount
         return () => {
             document.removeEventListener('mousemove', onMouseMove);
-            mountRef.current.removeChild(renderer.domElement);
+            if (mountRef.current && renderer.domElement) {
+                mountRef.current.removeChild(renderer.domElement);
+            }
         };
     }, []);
 
