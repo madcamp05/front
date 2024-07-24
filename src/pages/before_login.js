@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { WEBGL } from '../webgl';
 import TWEEN from '@tweenjs/tween.js';
 import { useNavigate } from 'react-router-dom';
+import { TextureLoader } from 'three';
 
 const BeforeLogin = () => {
   const navigate = useNavigate();
@@ -94,6 +95,8 @@ const BeforeLogin = () => {
       doorGroup.position.set(-1, 3, 10.6); // Set the door group position
       scene.add(doorGroup);
 
+
+
       // Create house group to move entire house
       houseGroup = new THREE.Group();
       houseGroup.add(frontWall);
@@ -106,6 +109,34 @@ const BeforeLogin = () => {
       houseGroup.add(behindDoor);
       houseGroup.add(doorGroup);
       scene.add(houseGroup);
+
+      // fix: PNG 텍스처 로드 및 배치
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load('/assets/png/zipzoom.png', (texture) => { // 경로 수정
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true, // 투명도 활성화
+          alphaTest: 0.5 // 알파 값 테스트 기준 설정
+        });
+        const geometry = new THREE.PlaneGeometry(30, 8); // Increase size
+        const pngMesh = new THREE.Mesh(geometry, material);
+        pngMesh.position.set(5.3, -2, 11);
+        // scene.add(pngMesh);
+        houseGroup.add(pngMesh);
+      });
+      textureLoader.load('/assets/png/clickdoor4.png', (texture) => { // 경로 수정
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true, // 투명도 활성화
+          alphaTest: 0.5 // 알파 값 테스트 기준 설정
+        });
+        const geometry2 = new THREE.PlaneGeometry(22, 20); // Increase size
+        const pngMesh2 = new THREE.Mesh(geometry2, material);
+        pngMesh2.rotation.x = -1.57;
+        pngMesh2.position.set(22, 0, -1);
+        houseGroup.add(pngMesh2);
+        // scene.add(pngMesh2);
+      });
 
       // Door open/close logic
       let doorOpen = false;

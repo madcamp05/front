@@ -32,19 +32,54 @@ const MyGameRoom = () => {
             container.innerHTML = ''; // Ensure the container is empty
             container.appendChild(renderer.domElement);
 
-            // Light
-            const pointLight = new THREE.PointLight(0x6B61A9, 0.9);
+            // // Light
+            // const pointLight = new THREE.PointLight(0x6B61A9, 0.9);
+            // pointLight.position.set(8, 10, 10);
+            // scene.add(pointLight);
+
+            // //             // Warm light
+            // const warmLight = new THREE.DirectionalLight(0xFFD70E, 0.4); // Orange light
+            // warmLight.position.set(0, 5, 5); // Position the light
+            // scene.add(warmLight);
+
+            // //             // Additional warm light from above
+            // const warmLightAbove = new THREE.DirectionalLight(0xE50EFF, 0.1); // Orange light
+            // warmLightAbove.position.set(0, 10, 10); // Position the light above
+            // scene.add(warmLightAbove);
+
+            //Light
+            const pointLight = new THREE.PointLight(0xD500FF, 1);
             pointLight.position.set(8, 10, 10);
             scene.add(pointLight);
 
-            //             // Warm light
-            const warmLight = new THREE.DirectionalLight(0xFFD70E, 0.4); // Orange light
-            warmLight.position.set(0, 5, 5); // Position the light
-            scene.add(warmLight);
+            // Lights
+            const light = new THREE.DirectionalLight(0xffffFF, 0.8);
+            light.position.set(10, 10, 10).normalize();
+            scene.add(light);
 
-            //             // Additional warm light from above
-            const warmLightAbove = new THREE.DirectionalLight(0xE50EFF, 0.1); // Orange light
-            warmLightAbove.position.set(0, 10, 10); // Position the light above
+            // // Warm light
+            const warmLight = new THREE.DirectionalLight(0xFF7000, 0.8); // Orange light
+            warmLight.position.set(0, 7, 3); // Position the light
+            scene.add(warmLight);
+            // Warm light
+            const warmLight2 = new THREE.DirectionalLight(0x0046FF, 0.4); // Orange light
+            warmLight.position.set(0, 5, 5); // Position the light
+            scene.add(warmLight2);
+
+            const ambientLight = new THREE.AmbientLight(0x0046FF);
+            // scene.add(ambientLight);
+
+            // // //Additional warm light from above
+            // const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
+            // warmLightAbove.position.set(0, 10, 0); // Position the light above
+            // scene.add(warmLightAbove);
+            // // //Additional warm light from above
+            // const warmLightAbove2 = new THREE.DirectionalLight(0xffa500, 0.2); // Orange light
+            // warmLightAbove.position.set(0, 10, 0); // Position the light above
+            // scene.add(warmLightAbove2);
+            // Additional warm light from above
+            const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
+            warmLightAbove.position.set(0, 10, 0); // Position the light above
             scene.add(warmLightAbove);
 
             // Load models & animate

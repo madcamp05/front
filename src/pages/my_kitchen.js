@@ -30,15 +30,51 @@ const MyKitchen = () => {
       container.innerHTML = ''; // Ensure the container is empty
       container.appendChild(renderer.domElement);
 
-      // Light
-      const pointLight = new THREE.PointLight(0xffffff, 0.9);
+      // // Light
+      // const pointLight = new THREE.PointLight(0xffffff, 0.9);
+      // pointLight.position.set(8, 10, 10);
+      // scene.add(pointLight);
+
+      // // Warm light
+      // const warmLight = new THREE.DirectionalLight(0xFFF7CA, 0.2); // Orange light
+      // warmLight.position.set(0, 5, 5); // Position the light
+      // scene.add(warmLight);
+      //Light
+      const pointLight = new THREE.PointLight(0xFF5D00, 1);
       pointLight.position.set(8, 10, 10);
       scene.add(pointLight);
 
-      // Warm light
-      const warmLight = new THREE.DirectionalLight(0xFFF7CA, 0.2); // Orange light
-      warmLight.position.set(0, 5, 5); // Position the light
+      // Lights
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(10, 10, 10).normalize();
+      scene.add(light);
+
+
+
+      // // Warm light
+      const warmLight = new THREE.DirectionalLight(0xF7EC08, 0.8); // Orange light
+      warmLight.position.set(0, 7, 3); // Position the light
       scene.add(warmLight);
+      // Warm light
+      const warmLight2 = new THREE.DirectionalLight(0xFF561B, 0.4); // Orange light
+      warmLight.position.set(0, 5, 5); // Position the light
+      scene.add(warmLight2);
+
+      const ambientLight = new THREE.AmbientLight(0x404040);
+      scene.add(ambientLight);
+
+      // // //Additional warm light from above
+      // const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
+      // warmLightAbove.position.set(0, 10, 0); // Position the light above
+      // scene.add(warmLightAbove);
+      // // //Additional warm light from above
+      // const warmLightAbove2 = new THREE.DirectionalLight(0xffa500, 0.2); // Orange light
+      // warmLightAbove.position.set(0, 10, 0); // Position the light above
+      // scene.add(warmLightAbove2);
+      // Additional warm light from above
+      const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
+      warmLightAbove.position.set(0, 10, 0); // Position the light above
+      scene.add(warmLightAbove);
 
       // Load models & animate
       loadModelsKitchen(scene, animate);
@@ -63,9 +99,9 @@ const MyKitchen = () => {
             animateCameraToObject(selectedObject, '/kitchen/sink');
           } else if (selectedObject.name === 'Box002') {
             animateCameraToObject(selectedObject, '/kitchen/fridge'); // Navigate to /kitchen/fridge for Box002
-          } else if (selectedObject.name === 'Counter_Plane' || 
+          } else if (selectedObject.name === 'Counter_Plane' ||
             selectedObject.name === 'Bottom_of_oven_Cabinet1_Door' ||
-            selectedObject.name === 'Omni_0_005' 
+            selectedObject.name === 'Omni_0_005'
           ) {
             animateCameraToObject(selectedObject, '/kitchen/oven'); // Navigate to /kitchen/fridge for Box002
           } else if (selectedObject.name === 'Group_002' ||
@@ -117,10 +153,10 @@ const MyKitchen = () => {
         renderer.render(scene, camera);
       }
 
-      // Additional warm light from above
-      const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.3); // Orange light
-      warmLightAbove.position.set(0, 10, 0); // Position the light above
-      scene.add(warmLightAbove);
+      // // Additional warm light from above
+      // const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.3); // Orange light
+      // warmLightAbove.position.set(0, 10, 0); // Position the light above
+      // scene.add(warmLightAbove);
 
       // Materials
       const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x999999 });

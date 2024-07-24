@@ -19,6 +19,8 @@ import Clock from './pages/clock';
 import Bed from './pages/myroom/bed';
 import Sidebar from './Sidebar';
 import MiniGame from './pages/gameroom/minigame';
+import '../static/styles/main.css'; // main.css 파일 import
+
 
 const Layout = () => {
   const location = useLocation();
