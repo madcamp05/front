@@ -15,10 +15,7 @@
     "@babel/core": "^7.24.9",
     "@babel/preset-env": "^7.24.8",
     "@babel/preset-react": "^7.24.7",
-<<<<<<< HEAD
-=======
     "@react-three/cannon": "^6.6.0",
->>>>>>> 242d3326fbbeda44d01b005d25556e2b37052aa6
     "@react-three/drei": "^9.109.1",
     "@react-three/fiber": "^8.16.8",
     "@tweenjs/tween.js": "^23.1.2",
@@ -31,14 +28,11 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",
-<<<<<<< HEAD
+    "schema-utils": "^2.7.1",
+    "simplex-noise": "^4.0.2",
     "style-loader": "^4.0.0",
     "three": "^0.166.1",
     "three-stdlib": "^2.30.4",
-=======
-    "schema-utils": "^2.7.1",
-    "three": "^0.166.1",
->>>>>>> 242d3326fbbeda44d01b005d25556e2b37052aa6
     "webpack-dev-server": "^5.0.4"
   },
   "devDependencies": {
