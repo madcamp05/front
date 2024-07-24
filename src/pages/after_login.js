@@ -10,7 +10,7 @@ const AfterLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let renderer, scene, camera, animate;
+    let renderer, scene, camera, animate, onWindowResize, onMouseClick;
     if (WEBGL.isWebGLAvailable()) {
       // Scene
       scene = new THREE.Scene();
@@ -67,12 +67,30 @@ const AfterLogin = () => {
           console.log('Selected object:', selectedObject.name); // Debug statement
           if (selectedObject.name === 'blanket') {
             console.log("selectedObject.name == blanket");
-            animateCameraToObject(selectedObject);
+            animateCameraToObject(selectedObject, '/room/bed');
+          } else if (selectedObject.name === 'panel_imac' || selectedObject.name === 'mouse') {
+            console.log("selectedObject.name == imac");
+            animateCameraToObject(selectedObject, '/room/imac');
+          } else if (selectedObject.name === 'object_1' ||
+            selectedObject.name === 'object_17' ||
+            selectedObject.name === 'object_16' ||
+            selectedObject.name === 'object_18' ||
+            selectedObject.name === 'object_13' ||
+            selectedObject.name === 'object_12' ||
+            selectedObject.name === 'object_7' ||
+            selectedObject.name === 'object_15' ||
+            selectedObject.name === 'object_19' ||
+            selectedObject.name === 'object_4' ||
+            selectedObject.name === 'object_16' ||
+            selectedObject.name === 'object_6'
+          ) {
+            console.log("selectedObject.name == bookshelf");
+            animateCameraToObject(selectedObject, '/room/bookshelf');
           }
         }
       }
 
-      function animateCameraToObject(object) {
+      function animateCameraToObject(object, navigateTo) {
         const targetPosition = new THREE.Vector3().copy(object.position);
         targetPosition.y += 2; // Adjust this value as needed for better zoom
         const startPosition = new THREE.Vector3().copy(camera.position);
@@ -98,7 +116,7 @@ const AfterLogin = () => {
           } else {
             // Wait for 5 seconds before navigating
             setTimeout(() => {
-              navigate('/myroom/bed');
+              navigate(navigateTo);
             }, 100);
           }
         }
@@ -106,17 +124,10 @@ const AfterLogin = () => {
         requestAnimationFrame(animate);
       }
 
-
-
-
-
-
       animate = function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
       }
-
-
 
       // Materials
       const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x999999 });
@@ -194,7 +205,7 @@ const AfterLogin = () => {
       }
       requestAnimationFrame(render);
 
-      function onWindowResize() {
+      onWindowResize = function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -214,7 +225,7 @@ const AfterLogin = () => {
         }
       }
       window.removeEventListener('resize', onWindowResize);
-      document.removeEventListener('click', onMouseClick);
+      // document.removeEventListener('click', onMouseClick);
     };
   }, []);
 

@@ -49,11 +49,11 @@ const Bed = () => {
             return star;
         };
 
-        for (let i = 0; i < 150; i++) {
+        for (let i = 0; i < 170; i++) {
             const size = Math.random() * 0.5;
-            const x = (Math.random() - 0.5) * 50;
-            const y = (Math.random() - 0.5) * 50;
-            const z = (Math.random() - 1) * 20 - 10; // Spread stars further back
+            const x = (Math.random() - 0.5) * 55;
+            const y = (Math.random() - 0.5) * 55;
+            const z = (Math.random() - 1) * 20 - 1; // Spread stars further back
             const star = createStar(size, x, y, z);
             scene.add(star); // Add stars directly to the scene
         }
@@ -72,10 +72,10 @@ const Bed = () => {
         const colors = [0xffc0cb, 0xffd700, 0xadd8e6, 0x90ee90, 0xffa07a]; // pink, gold, light blue, light green, light salmon
 
         // Create and add planets to the scene
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 6; i++) {
             const size = Math.random() * 0.8 + 0.2; // Planets are larger than stars
-            const x = (Math.random() - 0.5) * 25;
-            const y = (Math.random() - 0.5) * 25;
+            const x = (Math.random() - 0.5) * 20;
+            const y = (Math.random() - 0.5) * 20;
             const z = (Math.random() - 1) * 20 - 10; // Spread planets further back
             const color = colors[Math.floor(Math.random() * colors.length)];
             const planet = createPlanet(size, color, x, y, z);

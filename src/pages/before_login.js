@@ -290,7 +290,7 @@ const BeforeLogin = () => {
           alert('Login successful!');
           document.getElementById('login-container').style.display = 'none';
 
-          console.log("Navigating to /myroom");
+          console.log("Navigating to /room");
           navigate('/room'); // React Router를 사용하여 페이지 전환
         } else {
           const errorData = await response.json();
@@ -311,8 +311,8 @@ const BeforeLogin = () => {
         renderer.dispose();
         document.getElementById('webgl-container').removeChild(renderer.domElement);
       }
-      window.removeEventListener('resize', onWindowResize);
-      window.removeEventListener('click', toggleDoor);
+      // window.removeEventListener('resize', onWindowResize);
+      // window.removeEventListener('click', toggleDoor);
     };
 
   }, []);
