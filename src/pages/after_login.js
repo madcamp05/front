@@ -209,12 +209,12 @@ const AfterLogin = () => {
       if (renderer) {
         renderer.dispose();
         const container = document.getElementById('webgl-container');
-        // if (container && renderer.domElement) {
-        //   container.removeChild(renderer.domElement);
-        // }
+        if (container && renderer.domElement) {
+          container.removeChild(renderer.domElement);
+        }
       }
-      // window.removeEventListener('resize', onWindowResize);
-      // document.removeEventListener('click', onMouseClick);
+      window.removeEventListener('resize', onWindowResize);
+      document.removeEventListener('click', onMouseClick);
     };
   }, []);
 

@@ -309,10 +309,10 @@ const BeforeLogin = () => {
       // Clean up Three.js resources and DOM elements
       if (renderer) {
         renderer.dispose();
-        // document.getElementById('webgl-container').removeChild(renderer.domElement);
+        document.getElementById('webgl-container').removeChild(renderer.domElement);
       }
-      // window.removeEventListener('resize', onWindowResize);
-      // window.removeEventListener('click', toggleDoor);
+      window.removeEventListener('resize', onWindowResize);
+      window.removeEventListener('click', toggleDoor);
     };
 
   }, []);
