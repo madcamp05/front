@@ -63,7 +63,10 @@ const MyKitchen = () => {
             animateCameraToObject(selectedObject, '/kitchen/sink');
           } else if (selectedObject.name === 'Box002') {
             animateCameraToObject(selectedObject, '/kitchen/fridge'); // Navigate to /kitchen/fridge for Box002
-          } else if (selectedObject.name === 'Counter_Plane') {
+          } else if (selectedObject.name === 'Counter_Plane' || 
+            selectedObject.name === 'Bottom_of_oven_Cabinet1_Door' ||
+            selectedObject.name === 'Omni_0_005' 
+          ) {
             animateCameraToObject(selectedObject, '/kitchen/oven'); // Navigate to /kitchen/fridge for Box002
           } else if (selectedObject.name === 'Group_002' ||
             selectedObject.name === 'Group_006' ||

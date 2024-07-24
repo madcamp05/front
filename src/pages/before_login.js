@@ -291,7 +291,7 @@ const BeforeLogin = () => {
           document.getElementById('login-container').style.display = 'none';
 
           console.log("Navigating to /myroom");
-          navigate('/myroom'); // React Router를 사용하여 페이지 전환
+          navigate('/room'); // React Router를 사용하여 페이지 전환
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`); s

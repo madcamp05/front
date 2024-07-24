@@ -135,8 +135,16 @@ const MySink = () => {
 
     // Clean up
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      containerRef.current.removeChild(renderer.domElement);
+      // Clean up Three.js resources and DOM elements
+      if (renderer) {
+        renderer.dispose();
+        const container = document.getElementById('webgl-container');
+        if (container && renderer.domElement) {
+          container.removeChild(renderer.domElement);
+        }
+      }
+      window.removeEventListener('resize', onWindowResize);
+      document.removeEventListener('click', onMouseClick);
     };
   }, []);
 
