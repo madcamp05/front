@@ -199,6 +199,17 @@ const GameConsole = () => {
 };
 
 const MiniGame = () => {
+    // useEffect(() => {
+    //     const audio = new Audio('/musics/background-music.mp3');
+    //     audio.loop = true;
+    //     audio.play();
+
+    //     return () => {
+    //         audio.pause();
+    //         audio.currentTime = 0;
+    //     };
+    // }, []);
+
     return (
         <Canvas camera={{ position: [0, 0, 20] }} style={{ height: '100vh', width: '100vw' }}>
             <ambientLight />

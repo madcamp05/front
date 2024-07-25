@@ -22,7 +22,7 @@ const BeforeLogin = () => {
       camera.lookAt(0, 5, 0);
 
       // Renderer
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.getElementById('webgl-container').appendChild(renderer.domElement);
 
@@ -80,7 +80,7 @@ const BeforeLogin = () => {
       const floor = new THREE.Mesh(floorGeometry, new THREE.MeshStandardMaterial({ color: 0x8b4513 }));
       floor.rotation.x = -Math.PI / 2;
       floor.position.y = 0;
-      scene.add(floor)
+      scene.add(floor);
 
       const behindDoorMaterial = new THREE.MeshStandardMaterial({ color: 0xfff7cc });
       const behindDoor = new THREE.Mesh(doorGeometry, behindDoorMaterial);
@@ -97,8 +97,6 @@ const BeforeLogin = () => {
       doorGroup.add(door);
       doorGroup.position.set(-1, 3, 10.6); // Set the door group position
       scene.add(doorGroup);
-
-
 
       // Create house group to move entire house
       houseGroup = new THREE.Group();
@@ -215,7 +213,7 @@ const BeforeLogin = () => {
         TWEEN.update();
 
         renderer.render(scene, camera);
-      }
+      };
       animate();
 
       // Responsive handling
@@ -225,11 +223,24 @@ const BeforeLogin = () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
       }
       window.addEventListener('resize', onWindowResize);
-
     } else {
       const warning = WEBGL.getWebGLErrorMessage();
       document.body.appendChild(warning);
     }
+
+    // Play background music
+    const audio = new Audio('/musics/login.mp3');
+    audio.loop = true;
+
+    audio.play().catch((error) => {
+      console.error('Error playing audio:', error);
+      // If the browser prevents autoplay, prompt the user to interact with the page
+      document.addEventListener('click', () => {
+        audio.play().catch((error) => {
+          console.error('Error playing audio on click:', error);
+        });
+      }, { once: true });
+    });
 
     // Create and style login form
     const loginContainer = document.createElement('div');
@@ -328,7 +339,7 @@ const BeforeLogin = () => {
           navigate('/room'); // React Router를 사용하여 페이지 전환
         } else {
           const errorData = await response.json();
-          alert(`Error: ${errorData.message}`); s
+          alert(`Error: ${errorData.message}`);
         }
       } catch (error) {
         console.error('Fetch error:', error);
@@ -338,20 +349,18 @@ const BeforeLogin = () => {
     loginContainer.appendChild(loginForm);
     document.body.appendChild(loginContainer);
 
-
     return () => {
       // Clean up Three.js resources and DOM elements
       if (renderer) {
         renderer.dispose();
         document.getElementById('webgl-container').removeChild(renderer.domElement);
       }
-      // window.removeEventListener('resize', onWindowResize);
-      // window.removeEventListener('click', toggleDoor);
+      // Stop background music
+      audio.pause();
+      audio.currentTime = 0;
     };
 
-  }, []);
-
-
+  }, [navigate]);
 
   return <div id="webgl-container"></div>;
 };
