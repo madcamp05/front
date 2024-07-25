@@ -23,16 +23,15 @@ import '../static/styles/main.css'; // main.css 파일 import
 
 
 const Layout = () => {
-  const location = useLocation();
-  const showSidebar = ['/room', '/game', '/kitchen'].some(path => location.pathname.startsWith(path));
+  //const location = useLocation();
+  //const showSidebar = ['/room', '/game', '/kitchen'].some(path => location.pathname.startsWith(path));
 
   return (
     <div className="app-container">
-      {showSidebar && <Sidebar />}
+      <Sidebar />
 
       <Routes>
-        {/* <Route path="/" element={<BeforeLogin />} /> */}
-        <Route path="/" element={<IMacCanvas />} />
+        <Route path="/" element={<BeforeLogin />} />
 
         <Route path="/clock" element={<Clock />} />
 

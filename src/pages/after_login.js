@@ -247,7 +247,7 @@ const AfterLogin = () => {
           container.removeChild(renderer.domElement);
         }
       }
-      window.removeEventListener('resize', onWindowResize);
+      // window.removeEventListener('resize', onWindowResize);
       // document.removeEventListener('click', onMouseClick);
     };
   }, []);
