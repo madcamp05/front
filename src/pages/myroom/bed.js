@@ -121,8 +121,30 @@ const Bed = () => {
         };
         animate();
 
+        const audio = new Audio('/musics/stars.mp3');
+        audio.loop = true;
+
+        function checkURLandControlAudio() {
+            if (window.location.pathname !== '/room/bed') {
+                audio.pause();
+            } else {
+                audio.play().catch((error) => {
+                    console.error('Error playing audio on URL check:', error);
+                });
+            }
+        }
+
+        // Add an event listener to detect URL changes
+        window.addEventListener('popstate', checkURLandControlAudio);
+
+        // For initial load
+        checkURLandControlAudio();
+
+
         // Cleanup on component unmount
         return () => {
+            audio.pause();
+            audio.currentTime = 0;
             document.removeEventListener('mousemove', onMouseMove);
             if (mountRef.current && renderer.domElement) {
                 mountRef.current.removeChild(renderer.domElement);
