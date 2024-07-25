@@ -53,7 +53,7 @@ const Bookshelf = ({ handleBookClick }) => {
   const shelfWidth = 3;
   const shelfHeight = 0.1;
   const shelfDepth = 0.5;
-  const numShelves = 8;
+  const numShelves = 5;
   const spaceBetweenShelves = 1;
 
   const shelves = [];
@@ -125,12 +125,18 @@ const createTextTexture = (text) => {
     return new THREE.CanvasTexture(canvas);
 };
 
-const BookDetail = ({ position, size, color }) => {
+const BookDetail = ({ position, size, color, onClose }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const totalPages = 9; // Number of pages in the book
 
     const handlePageTurn = () => {
-        setCurrentPage((prevPage) => (prevPage + 1) % (totalPages + 1));
+        setCurrentPage((prevPage) => {
+            const nextPage = (prevPage + 1) % (totalPages + 1);
+            if (nextPage === 0) {
+                onClose();
+            }
+            return nextPage;
+        });
     };
 
     const pageContents = useMemo(() => [
@@ -151,6 +157,7 @@ const BookDetail = ({ position, size, color }) => {
             <mesh
                 position={[0, 0, size[2] / 2]}
                 rotation={[0, currentPage === 0 ? 0 : -Math.PI / 2, 0]}
+                visible={currentPage === 0}
             >
                 <planeGeometry args={[size[0], size[1]]} />
                 <meshStandardMaterial color={color} />
@@ -161,6 +168,7 @@ const BookDetail = ({ position, size, color }) => {
                     key={index}
                     position={[0, 0, (size[2] / 2) - 0.02 * (index + 1)]}
                     rotation={[0, index + 1 < currentPage ? -Math.PI / 2 : 0, 0]}
+                    visible={index === currentPage - 1}
                 >
                     <planeGeometry args={[size[0], size[1]]} />
                     <meshStandardMaterial map={createTextTexture(pageContents[index] || '')} />
@@ -178,12 +186,15 @@ const BookDetail = ({ position, size, color }) => {
     );
 };
 
-
 const BookshelfScene = () => {
   const [selectedBook, setSelectedBook] = useState(null);
 
   const handleBookClick = (book) => {
     setSelectedBook(book);
+  };
+
+  const handleCloseBook = () => {
+    setSelectedBook(null);
   };
 
   return (
@@ -192,7 +203,12 @@ const BookshelfScene = () => {
       <pointLight position={[10, 10, 10]} />
       <Bookshelf handleBookClick={handleBookClick} />
       {selectedBook && (
-        <BookDetail position={selectedBook.position} size={selectedBook.size} color={selectedBook.color} />
+        <BookDetail
+          position={selectedBook.position}
+          size={selectedBook.size}
+          color={selectedBook.color}
+          onClose={handleCloseBook}
+        />
       )}
       <OrbitControls />
     </Canvas>

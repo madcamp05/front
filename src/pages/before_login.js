@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { WEBGL } from '../webgl';
 import TWEEN from '@tweenjs/tween.js';
 import { useNavigate } from 'react-router-dom';
+import { TextureLoader } from 'three';
 
 const BeforeLogin = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const BeforeLogin = () => {
     if (WEBGL.isWebGLAvailable()) {
       // Scene
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xeeeeee);
+      scene.background = new THREE.Color(0x000000);
 
       // Camera
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
@@ -26,16 +27,19 @@ const BeforeLogin = () => {
       document.getElementById('webgl-container').appendChild(renderer.domElement);
 
       // Lights
-      const light = new THREE.DirectionalLight(0xffffff, 1);
-      light.position.set(10, 10, 10).normalize();
+      const light = new THREE.DirectionalLight(0xffffff, 0.9);
+      const light2 = new THREE.DirectionalLight(0xffffff, 0.9);
+      light.position.set(5, 5, 5).normalize();
+      light2.position.set(3, 3, 3).normalize();
       scene.add(light);
+      scene.add(light2);
 
-      const ambientLight = new THREE.AmbientLight(0x404040);
-      scene.add(ambientLight);
+      const ambientLight = new THREE.AmbientLight(0xffffff);
+      // scene.add(ambientLight);
 
       // House materials
-      const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-      const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+      const wallMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+      const roofMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
 
       // House geometries
       const wallGeometry = new THREE.BoxGeometry(20, 10, 1);
@@ -94,6 +98,8 @@ const BeforeLogin = () => {
       doorGroup.position.set(-1, 3, 10.6); // Set the door group position
       scene.add(doorGroup);
 
+
+
       // Create house group to move entire house
       houseGroup = new THREE.Group();
       houseGroup.add(frontWall);
@@ -106,6 +112,34 @@ const BeforeLogin = () => {
       houseGroup.add(behindDoor);
       houseGroup.add(doorGroup);
       scene.add(houseGroup);
+
+      // fix: PNG 텍스처 로드 및 배치
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load('/assets/png/zipzoomW.png', (texture) => { // 경로 수정
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true, // 투명도 활성화
+          alphaTest: 0.5 // 알파 값 테스트 기준 설정
+        });
+        const geometry = new THREE.PlaneGeometry(30, 8); // Increase size
+        const pngMesh = new THREE.Mesh(geometry, material);
+        pngMesh.position.set(5.3, -2, 11);
+        // scene.add(pngMesh);
+        houseGroup.add(pngMesh);
+      });
+      textureLoader.load('/assets/png/clickdoorW.png', (texture) => { // 경로 수정
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true, // 투명도 활성화
+          alphaTest: 0.5 // 알파 값 테스트 기준 설정
+        });
+        const geometry2 = new THREE.PlaneGeometry(22, 20); // Increase size
+        const pngMesh2 = new THREE.Mesh(geometry2, material);
+        pngMesh2.rotation.x = -1.57;
+        pngMesh2.position.set(22, 0, -1);
+        houseGroup.add(pngMesh2);
+        // scene.add(pngMesh2);
+      });
 
       // Door open/close logic
       let doorOpen = false;
@@ -290,7 +324,7 @@ const BeforeLogin = () => {
           alert('Login successful!');
           document.getElementById('login-container').style.display = 'none';
 
-          console.log("Navigating to /myroom");
+          console.log("Navigating to /room");
           navigate('/room'); // React Router를 사용하여 페이지 전환
         } else {
           const errorData = await response.json();
@@ -309,7 +343,7 @@ const BeforeLogin = () => {
       // Clean up Three.js resources and DOM elements
       if (renderer) {
         renderer.dispose();
-        // document.getElementById('webgl-container').removeChild(renderer.domElement);
+        document.getElementById('webgl-container').removeChild(renderer.domElement);
       }
       // window.removeEventListener('resize', onWindowResize);
       // window.removeEventListener('click', toggleDoor);

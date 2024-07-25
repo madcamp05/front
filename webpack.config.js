@@ -17,7 +17,7 @@ module.exports = {
         use: ['babel-loader'],
       },
       {
-        test: /\.css$/,
+        test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
       {
@@ -34,6 +34,9 @@ module.exports = {
     ],
   },
   resolve: {
+    alias: {
+      styles: path.resolve(__dirname, 'static/styles')
+    },
     extensions: ['*', '.js', '.jsx'],
   },
   plugins: [
