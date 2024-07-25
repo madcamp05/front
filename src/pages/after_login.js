@@ -66,6 +66,7 @@ const AfterLogin = () => {
 
         if (intersects.length > 0) {
           const selectedObject = intersects[0].object;
+          //console.log("selectedObject === ", selectedObject.name);
           if (selectedObject.name === 'blanket') {
             animateCameraToObject(selectedObject, '/room/bed');
           } else if (selectedObject.name === 'panel_imac' || selectedObject.name === 'mouse') {
@@ -84,6 +85,8 @@ const AfterLogin = () => {
             selectedObject.name === 'object_6'
           ) {
             animateCameraToObject(selectedObject, '/room/bookshelf');
+          } else if (selectedObject.name === 'mdlwc_2_pointer_plate') {
+            animateCameraToObject(selectedObject, '/clock');
           }
         }
       };
