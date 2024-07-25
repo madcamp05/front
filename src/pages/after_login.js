@@ -1,71 +1,52 @@
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { WEBGL } from '../webgl';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { loadModelsKitchen } from '../loadModelsKitchen';
-import { useNavigate } from 'react-router-dom';
 import { loadModels } from '../loaders/loadModels';
-import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const AfterLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let renderer, scene, camera, animate, onWindowResize, onMouseClick;
+    let renderer, scene, camera;
+    let animate;
+    let onWindowResize, onMouseClick;
+
     if (WEBGL.isWebGLAvailable()) {
-      // Scene
+      // Scene setup
       scene = new THREE.Scene();
       scene.background = new THREE.Color(0xffffff);
 
-      // Camera
+      // Camera setup
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
       const initialCameraPosition = { x: 10, y: 7, z: 10 };
       camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
       camera.lookAt(0, 0, 0);
 
-      // Renderer
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
-      });
+      // Renderer setup
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       const container = document.getElementById('webgl-container');
       container.innerHTML = ''; // Ensure the container is empty
       container.appendChild(renderer.domElement);
 
-      //Light
+      // Lights setup
       const pointLight = new THREE.PointLight(0xFF561B, 1);
       pointLight.position.set(8, 10, 10);
       scene.add(pointLight);
 
-      // Lights
       const light = new THREE.DirectionalLight(0xffffff, 1);
       light.position.set(10, 10, 10).normalize();
       scene.add(light);
 
-
-
-      // // Warm light
       const warmLight = new THREE.DirectionalLight(0xFFF7CA, 0.8); // Orange light
       warmLight.position.set(0, 7, 3); // Position the light
       scene.add(warmLight);
-      // Warm light
+
       const warmLight2 = new THREE.DirectionalLight(0xFFF300, 0.4); // Orange light
-      warmLight.position.set(0, 5, 5); // Position the light
+      warmLight2.position.set(0, 5, 5); // Position the light
       scene.add(warmLight2);
 
-      const ambientLight = new THREE.AmbientLight(0x404040);
-      // scene.add(ambientLight);
-
-      // // //Additional warm light from above
-      // const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
-      // warmLightAbove.position.set(0, 10, 0); // Position the light above
-      // scene.add(warmLightAbove);
-      // // //Additional warm light from above
-      // const warmLightAbove2 = new THREE.DirectionalLight(0xffa500, 0.2); // Orange light
-      // warmLightAbove.position.set(0, 10, 0); // Position the light above
-      // scene.add(warmLightAbove2);
-      // Additional warm light from above
       const warmLightAbove = new THREE.DirectionalLight(0xffa500, 0.5); // Orange light
       warmLightAbove.position.set(0, 10, 0); // Position the light above
       scene.add(warmLightAbove);
@@ -77,9 +58,7 @@ const AfterLogin = () => {
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
 
-      document.addEventListener('click', onMouseClick);
-
-      function onMouseClick(event) {
+      onMouseClick = (event) => {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
@@ -87,12 +66,9 @@ const AfterLogin = () => {
 
         if (intersects.length > 0) {
           const selectedObject = intersects[0].object;
-          console.log('Selected object:', selectedObject.name); // Debug statement
           if (selectedObject.name === 'blanket') {
-            console.log("selectedObject.name == blanket");
             animateCameraToObject(selectedObject, '/room/bed');
           } else if (selectedObject.name === 'panel_imac' || selectedObject.name === 'mouse') {
-            console.log("selectedObject.name == imac");
             animateCameraToObject(selectedObject, '/room/imac');
           } else if (selectedObject.name === 'object_1' ||
             selectedObject.name === 'object_17' ||
@@ -107,11 +83,12 @@ const AfterLogin = () => {
             selectedObject.name === 'object_16' ||
             selectedObject.name === 'object_6'
           ) {
-            console.log("selectedObject.name == bookshelf");
             animateCameraToObject(selectedObject, '/room/bookshelf');
           }
         }
-      }
+      };
+
+      document.addEventListener('click', onMouseClick);
 
       function animateCameraToObject(object, navigateTo) {
         const targetPosition = new THREE.Vector3().copy(object.position);
@@ -137,7 +114,6 @@ const AfterLogin = () => {
           if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
-            // Wait for 5 seconds before navigating
             setTimeout(() => {
               navigate(navigateTo);
             }, 100);
@@ -150,20 +126,15 @@ const AfterLogin = () => {
       animate = function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
-      }
+      };
 
-      // Materials
+      // Materials and geometry setup
       const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x999999 });
-      const floorMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        roughness: 1, // Reduce glossiness
-      });
+      const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 });
 
-      // Geometry
       const wallGeometry = new THREE.PlaneGeometry(15, 15);
       const floorGeometry = new THREE.PlaneGeometry(15, 15);
 
-      // Walls
       const wall1 = new THREE.Mesh(wallGeometry, wallMaterial);
       wall1.position.set(0, 2.5, -7.5);
       scene.add(wall1);
@@ -183,7 +154,6 @@ const AfterLogin = () => {
       wall4.position.set(0, 2.5, 7.5);
       scene.add(wall4);
 
-      // Floor
       const floor = new THREE.Mesh(floorGeometry, floorMaterial);
       floor.rotation.x = -Math.PI / 2;
       floor.position.y = -5;
@@ -228,34 +198,33 @@ const AfterLogin = () => {
       }
       requestAnimationFrame(render);
 
-      onWindowResize = function onWindowResize() {
+      onWindowResize = () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-      }
+      };
       window.addEventListener('resize', onWindowResize);
     } else {
       const warning = WEBGL.getWebGLErrorMessage();
       document.body.appendChild(warning);
     }
+
     return () => {
       // Clean up Three.js resources and DOM elements
       if (renderer) {
         renderer.dispose();
         const container = document.getElementById('webgl-container');
-        if (container && renderer.domElement) {
+        if (container && renderer.domElement && container.contains(renderer.domElement)) {
           container.removeChild(renderer.domElement);
         }
       }
-      // window.removeEventListener('resize', onWindowResize);
-      // document.removeEventListener('click', onMouseClick);
+      window.removeEventListener('resize', onWindowResize);
+      document.removeEventListener('click', onMouseClick);
     };
   }, []);
 
   return (
-    <div>
-      <div id="webgl-container"></div>
-    </div>
+    <div id="webgl-container"></div>
   );
 };
 

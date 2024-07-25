@@ -16,8 +16,16 @@ const MySink = () => {
     renderer.shadowMap.enabled = true;
     containerRef.current.appendChild(renderer.domElement);
 
-    // Create a bowl (outer part)
-    const outerGeometry = new THREE.CylinderGeometry(5, 5, 3, 32, 1, true);
+    // Create the bowl shape (outer part) with wavy edges
+    const points = [];
+    const segments = 32;
+    const waveHeight = 0.5;
+    for (let i = 0; i <= segments; i++) {
+      const theta = (i / segments) * Math.PI * 2;
+      const radius = 5 + Math.sin(theta * 5) * waveHeight;
+      points.push(new THREE.Vector2(radius, i / segments * 3));
+    }
+    const outerGeometry = new THREE.LatheGeometry(points, 64);
     const outerMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide });
     const outerBowl = new THREE.Mesh(outerGeometry, outerMaterial);
     outerBowl.rotation.x = Math.PI / 2;
@@ -25,8 +33,9 @@ const MySink = () => {
     outerBowl.receiveShadow = true;
     scene.add(outerBowl);
 
-    // Create the inner part of the bowl
-    const innerGeometry = new THREE.CylinderGeometry(4.5, 4.5, 2.8, 32);
+    // Create the inner part of the bowl with bottom
+    const innerPoints = points.map(p => new THREE.Vector2(p.x - 0.5, p.y));
+    const innerGeometry = new THREE.LatheGeometry(innerPoints, 64);
     const innerMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide });
     const innerBowl = new THREE.Mesh(innerGeometry, innerMaterial);
     innerBowl.rotation.x = Math.PI / 2;
@@ -34,6 +43,16 @@ const MySink = () => {
     innerBowl.castShadow = true;
     innerBowl.receiveShadow = true;
     scene.add(innerBowl);
+
+    // Create the bottom of the inner bowl
+    const bottomGeometry = new THREE.CircleGeometry(4, 64);
+    const bottomMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+    const bottom = new THREE.Mesh(bottomGeometry, bottomMaterial);
+    bottom.rotation.x = Math.PI / 2;
+    bottom.position.z = -1.5; // Position the bottom at the lowest part of the bowl
+    bottom.castShadow = true;
+    bottom.receiveShadow = true;
+    innerBowl.add(bottom);
 
     // Create dirty texture
     const dirtCanvas = document.createElement('canvas');
@@ -144,8 +163,8 @@ const MySink = () => {
       // Clean up Three.js resources and DOM elements
       if (renderer) {
         renderer.dispose();
-        const container = document.getElementById('webgl-container');
-        if (container && renderer.domElement) {
+        const container = containerRef.current;
+        if (container && renderer.domElement && container.contains(renderer.domElement)) {
           container.removeChild(renderer.domElement);
         }
       }
