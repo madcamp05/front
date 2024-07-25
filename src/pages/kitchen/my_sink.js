@@ -77,7 +77,7 @@ const MySink = () => {
     scene.add(directionalLight);
 
     // Position camera
-    camera.position.set(0, 5, 10);
+    camera.position.set(0, 5, 15); // Move the camera back by increasing the z value
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // Mouse movement handling for rotation and cleaning
@@ -99,7 +99,7 @@ const MySink = () => {
 
       if (intersects.length > 0) {
         const uv = intersects[0].uv;
-        const brushSize = 40;
+        const brushSize = 80; // Increase brush size
         dirtContextOuterInner.clearRect((uv.x * size) - brushSize / 2, (1 - uv.y) * size - brushSize / 2, brushSize, brushSize); // Clear a larger area
         dirtTextureOuterInner.needsUpdate = true;
 
