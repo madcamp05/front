@@ -20,12 +20,12 @@ import Bed from './pages/myroom/bed';
 import Sidebar from './Sidebar';
 
 const Layout = () => {
-  const location = useLocation();
-  const showSidebar = ['/room', '/game', '/kitchen'].some(path => location.pathname.startsWith(path));
+  //const location = useLocation();
+  //const showSidebar = ['/room', '/game', '/kitchen'].some(path => location.pathname.startsWith(path));
 
   return (
     <div className="app-container">
-      {showSidebar && <Sidebar />}
+      <Sidebar />
       <Routes>
         <Route path="/" element={<BeforeLogin />} />
 

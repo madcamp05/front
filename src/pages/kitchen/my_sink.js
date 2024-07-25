@@ -122,7 +122,14 @@ const MySink = () => {
         .start();
     };
 
+    const onWindowResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+
     window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('resize', onWindowResize);
 
     // Render loop
     const animate = () => {
@@ -133,7 +140,6 @@ const MySink = () => {
 
     animate();
 
-    // Clean up
     return () => {
       // Clean up Three.js resources and DOM elements
       if (renderer) {
@@ -144,7 +150,7 @@ const MySink = () => {
         }
       }
       window.removeEventListener('resize', onWindowResize);
-      document.removeEventListener('click', onMouseClick);
+      window.removeEventListener('mousemove', onMouseMove);
     };
   }, []);
 
