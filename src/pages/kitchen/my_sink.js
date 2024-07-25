@@ -16,27 +16,16 @@ const MySink = () => {
     renderer.shadowMap.enabled = true;
     containerRef.current.appendChild(renderer.domElement);
 
-    // Create the bowl shape (outer part) with wavy edges
-    const points = [];
-    const segments = 32;
-    const waveHeight = 0.5;
-    for (let i = 0; i <= segments; i++) {
-      const theta = (i / segments) * Math.PI * 2;
-      const radius = 5 + Math.sin(theta * 5) * waveHeight;
-      points.push(new THREE.Vector2(radius, i / segments * 3));
-    }
-    const outerGeometry = new THREE.LatheGeometry(points, 64);
-    const outerMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-    const outerBowl = new THREE.Mesh(outerGeometry, outerMaterial);
-    outerBowl.rotation.x = Math.PI / 2;
-    outerBowl.castShadow = true;
-    outerBowl.receiveShadow = true;
-    scene.add(outerBowl);
-
-    // Create the inner part of the bowl with bottom
-    const innerPoints = points.map(p => new THREE.Vector2(p.x - 0.5, p.y));
-    const innerGeometry = new THREE.LatheGeometry(innerPoints, 64);
-    const innerMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    // Create the inner bowl
+    const innerGeometry = new THREE.LatheGeometry(new THREE.SplineCurve([
+      new THREE.Vector2(0, 0),
+      new THREE.Vector2(3.5, 0),
+      new THREE.Vector2(4.5, 1),
+      new THREE.Vector2(5, 2),
+      new THREE.Vector2(5, 3),
+      new THREE.Vector2(4.5, 4)
+    ]).getPoints(20), 32);
+    const innerMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide }); // White color
     const innerBowl = new THREE.Mesh(innerGeometry, innerMaterial);
     innerBowl.rotation.x = Math.PI / 2;
     innerBowl.position.z = -0.1; // Slightly adjust position to avoid z-fighting
@@ -44,44 +33,35 @@ const MySink = () => {
     innerBowl.receiveShadow = true;
     scene.add(innerBowl);
 
-    // Create the bottom of the inner bowl
-    const bottomGeometry = new THREE.CircleGeometry(4, 64);
-    const bottomMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
-    const bottom = new THREE.Mesh(bottomGeometry, bottomMaterial);
-    bottom.rotation.x = Math.PI / 2;
-    bottom.position.z = -1.5; // Position the bottom at the lowest part of the bowl
-    bottom.castShadow = true;
-    bottom.receiveShadow = true;
-    innerBowl.add(bottom);
-
-    // Create dirty texture
-    const dirtCanvas = document.createElement('canvas');
+    // Create dirty texture for outer part of inner bowl
+    const dirtCanvasOuterInner = document.createElement('canvas');
     const size = 1024;
-    dirtCanvas.width = size;
-    dirtCanvas.height = size;
-    const dirtContext = dirtCanvas.getContext('2d');
+    dirtCanvasOuterInner.width = size;
+    dirtCanvasOuterInner.height = size;
+    const dirtContextOuterInner = dirtCanvasOuterInner.getContext('2d');
 
     // Fill the canvas with random dirt pattern
-    const createDirtPattern = () => {
-      dirtContext.fillStyle = '#654321'; // brown color for dirt
-      dirtContext.fillRect(0, 0, size, size);
+    const createDirtPattern = (context) => {
+      context.fillStyle = '#654321'; // brown color for dirt
+      context.fillRect(0, 0, size, size);
       for (let i = 0; i < 50000; i++) { // Increase number of dirt spots
         const x = Math.random() * size;
         const y = Math.random() * size;
         const radius = Math.random() * 3; // Decrease radius for more density
-        dirtContext.beginPath();
-        dirtContext.arc(x, y, radius, 0, Math.PI * 2, false);
-        dirtContext.fillStyle = 'rgba(0, 0, 0, 0.5)'; // darker spots
-        dirtContext.fill();
+        context.beginPath();
+        context.arc(x, y, radius, 0, Math.PI * 2, false);
+        context.fillStyle = 'rgba(0, 0, 0, 0.5)'; // darker spots
+        context.fill();
       }
     };
 
-    createDirtPattern();
+    createDirtPattern(dirtContextOuterInner);
 
-    const dirtTextureFromCanvas = new THREE.CanvasTexture(dirtCanvas);
-    const dirtMaterial = new THREE.MeshPhongMaterial({ map: dirtTextureFromCanvas, transparent: true });
-    const dirt = new THREE.Mesh(innerGeometry, dirtMaterial);
-    innerBowl.add(dirt);
+    const dirtTextureOuterInner = new THREE.CanvasTexture(dirtCanvasOuterInner);
+    const dirtMaterialOuterInner = new THREE.MeshPhongMaterial({ map: dirtTextureOuterInner, transparent: true, side: THREE.DoubleSide });
+    const dirtOuterInner = new THREE.Mesh(innerGeometry, dirtMaterialOuterInner);
+    dirtOuterInner.rotation.y = Math.PI; // Rotate to place on the outer side of inner bowl
+    innerBowl.add(dirtOuterInner);
 
     // Create soap bubbles group
     const bubbleGroup = new THREE.Group();
@@ -97,7 +77,8 @@ const MySink = () => {
     scene.add(directionalLight);
 
     // Position camera
-    camera.position.z = 10;
+    camera.position.set(0, 5, 10);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // Mouse movement handling for rotation and cleaning
     let mouse = new THREE.Vector2();
@@ -107,20 +88,20 @@ const MySink = () => {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      // Rotate camera based on mouse position
-      camera.position.x = mouse.x * 10;
-      camera.position.y = mouse.y * 10;
-      camera.lookAt(scene.position);
+      // Slightly rotate camera based on mouse position
+      camera.position.x = mouse.x * 5;
+      camera.position.y = 5 + mouse.y * 2;
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
 
       // Cleaning effect
       raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects([dirt]);
+      const intersects = raycaster.intersectObjects([dirtOuterInner]);
 
       if (intersects.length > 0) {
         const uv = intersects[0].uv;
         const brushSize = 40;
-        dirtContext.clearRect((uv.x * size) - brushSize / 2, (1 - uv.y) * size - brushSize / 2, brushSize, brushSize); // Clear a larger area
-        dirtTextureFromCanvas.needsUpdate = true;
+        dirtContextOuterInner.clearRect((uv.x * size) - brushSize / 2, (1 - uv.y) * size - brushSize / 2, brushSize, brushSize); // Clear a larger area
+        dirtTextureOuterInner.needsUpdate = true;
 
         // Create soap bubbles
         createSoapBubble(intersects[0].point);
