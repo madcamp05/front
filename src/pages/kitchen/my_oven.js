@@ -157,7 +157,7 @@ const GasStove = ({ isOn, toggle }) => {
     <mesh position={[0, -1, 0]}>
       <cylinderGeometry args={[2, 2, 0.5, 32]} />
       <meshStandardMaterial color="black" />
-      <BlueFlame />
+      {isOn && <BlueFlame />} {/* Conditionally render BlueFlame */}
       <ToggleButton isOn={isOn} toggle={toggle} />
     </mesh>
   );
