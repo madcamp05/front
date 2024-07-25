@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import BeforeLogin from './pages/before_login';
 import AfterLogin from './pages/after_login';
 import MyKitchen from './pages/my_kitchen';
@@ -20,6 +20,7 @@ import Bed from './pages/myroom/bed';
 import Sidebar from './Sidebar';
 import MiniGame from './pages/gameroom/minigame';
 import '../static/styles/main.css'; // main.css 파일 import
+import Scene from './pages/gameroom/moonlight';
 
 
 const Layout = () => {
@@ -42,7 +43,7 @@ const Layout = () => {
         <Route path="/room/imac" element={<IMacCanvas />} />
 
         <Route path="/game" element={<MyGameRoom />} />
-        <Route path="/game/moonlight" element={<BananaLight />} />
+        <Route path="/game/moonlight" element={<Scene />} />
         {/* moonlight 반드시!!!!! 초승달 위쪽 꼭짓점 누를 것!!!!!!! */}
         <Route path="/game/fan" element={<FanScene />} />
         {/* fan 반드시!! 위쪽 선풍기 날 누를 것!!!!!!!! */}
