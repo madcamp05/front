@@ -2,11 +2,6 @@ import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame, extend, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
-import { Water } from 'three/examples/jsm/objects/Water';
-import { TextureLoader } from 'three';
-
-// Extend the three.js Water class to be usable as a JSX component
-extend({ Water });
 
 // ClockHand component representing each hand of the clock
 const ClockHand = ({ length, color, rotationRef }) => (
@@ -40,7 +35,7 @@ const ClockFace = () => (
 );
 
 // ClockComponent handling the clock's hands and face
-const ClockComponent = () => {
+const ClockComponent = ({ handlePointerUp }) => {
   const hourRef = useRef();
   const secondRef = useRef();
 
@@ -56,7 +51,14 @@ const ClockComponent = () => {
   });
 
   return (
-    <group scale={[0.5, 0.5, 0.5]} position={[0, 2, 0]}>
+    <group
+      scale={[0.5, 0.5, 0.5]}
+      position={[0, 2, 0]}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        handlePointerUp();
+      }}
+    >
       <ClockFace />
       <ClockHand length={2} color="black" rotationRef={hourRef} />
       <ClockHand length={4.5} color="red" rotationRef={secondRef} />
@@ -64,40 +66,32 @@ const ClockComponent = () => {
   );
 };
 
-// WaterSurface component to create a water effect
+// WaterSurface component to create a ripple effect
 const WaterSurface = () => {
   const waterRef = useRef();
-  const { scene } = useThree();
+  const waterGeometry = useMemo(() => new THREE.PlaneGeometry(100, 100, 100, 100), []);
 
-  const waterGeometry = useMemo(() => new THREE.PlaneGeometry(100, 100), []);
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    const position = waterGeometry.attributes.position;
+    const waveHeight = 1; // Increased wave height for more pronounced motion
+    const frequency1 = 0.2; // Increased frequency for tighter waves
+    const frequency2 = 0.15;
 
-  useFrame((state, delta) => {
-    if (waterRef.current) {
-      waterRef.current.material.uniforms['time'].value += delta;
+    for (let i = 0; i < position.count; i++) {
+      const x = position.getX(i);
+      const y = position.getY(i);
+      const waveX = Math.sin(x * frequency1 + time) * waveHeight;
+      const waveY = Math.cos(y * frequency2 + time * 0.5) * waveHeight;
+      position.setZ(i, waveX + waveY);
     }
+    position.needsUpdate = true;
   });
 
   return (
-    <water
-      ref={waterRef}
-      args={[waterGeometry, {
-        textureWidth: 512,
-        textureHeight: 512,
-        waterNormals: new THREE.TextureLoader().load(
-          'https://threejs.org/examples/textures/waternormals.jpg',
-          (texture) => {
-            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-          }
-        ),
-        sunDirection: new THREE.Vector3(),
-        sunColor: 0xffffff,
-        waterColor: 0x001e0f,
-        distortionScale: 3.7,
-        fog: scene.fog !== undefined
-      }]}
-      rotation-x={-Math.PI / 2}
-      position={[0, -1, 0]} // Adjust position as needed
-    />
+    <mesh ref={waterRef} geometry={waterGeometry} rotation-x={-Math.PI / 2} position={[0, -1, 0]}>
+      <meshStandardMaterial color={'#006d5b'} transparent opacity={0.6} />
+    </mesh>
   );
 };
 
@@ -105,23 +99,13 @@ const WaterSurface = () => {
 const DarkBase = () => (
   <mesh position={[0, -51, 0]}>
     <boxGeometry args={[100, 100, 100]} />
-    <meshBasicMaterial color={'#001e0f'} />
+    <meshBasicMaterial color={'#006d5b'} />
   </mesh>
 );
 
 // FloatingGlassSphere component representing a floating glass sphere
 const FloatingGlassSphere = ({ position, color, onPointerDown, onPointerUp }) => {
   const ref = useRef();
-  const textureLoader = new TextureLoader();
-  const cubeTextureLoader = new THREE.CubeTextureLoader();
-  const envMap = cubeTextureLoader.load([
-    'https://threejs.org/examples/textures/cube/skybox/px.jpg',
-    'https://threejs.org/examples/textures/cube/skybox/nx.jpg',
-    'https://threejs.org/examples/textures/cube/skybox/py.jpg',
-    'https://threejs.org/examples/textures/cube/skybox/ny.jpg',
-    'https://threejs.org/examples/textures/cube/skybox/pz.jpg',
-    'https://threejs.org/examples/textures/cube/skybox/nz.jpg',
-  ]);
 
   useFrame(({ clock }) => {
     ref.current.position.y = position[1] + Math.sin(clock.getElapsedTime()) * 0.5;
@@ -139,9 +123,15 @@ const FloatingGlassSphere = ({ position, color, onPointerDown, onPointerUp }) =>
         color={color}
         metalness={0.6}
         roughness={0.1}
+        emissiveIntensity={1}
         transmission={0.9}
         thickness={1}
-        envMap={envMap}
+      />
+      <pointLight
+        color={color}
+        intensity={1.5} // Adjust intensity as needed
+        distance={5}
+        position={position}
       />
     </mesh>
   );
@@ -231,7 +221,7 @@ const ClockScene = ({ handlePointerDown, handlePointerUp }) => {
 
   return (
     <>
-      <ClockComponent />
+      <ClockComponent handlePointerUp={handlePointerUp} />
       <WaterSurface />
       <DarkBase />
       <GlassSpheres onPointerDown={onPointerDown} onPointerUp={onPointerUp} />
