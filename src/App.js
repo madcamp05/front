@@ -42,7 +42,7 @@ const Layout = () => {
         <Route path="/room/imac" element={<IMacCanvas />} />
 
         <Route path="/game" element={<MyGameRoom />} />
-        <Route path="/game/light" element={<BananaLight />} />
+        <Route path="/game/moonlight" element={<BananaLight />} />
         {/* moonlight 반드시!!!!! 초승달 위쪽 꼭짓점 누를 것!!!!!!! */}
         <Route path="/game/fan" element={<FanScene />} />
         {/* fan 반드시!! 위쪽 선풍기 날 누를 것!!!!!!!! */}
