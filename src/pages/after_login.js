@@ -5,6 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { loadModelsKitchen } from '../loadModelsKitchen';
 import { useNavigate } from 'react-router-dom';
 import { loadModels } from '../loaders/loadModels';
+import { motion } from 'framer-motion';
 
 const AfterLogin = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const AfterLogin = () => {
     if (WEBGL.isWebGLAvailable()) {
       // Scene
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xeeeeee);
+      scene.background = new THREE.Color(0xffffff);
 
       // Camera
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);

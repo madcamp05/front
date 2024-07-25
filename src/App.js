@@ -29,8 +29,10 @@ const Layout = () => {
   return (
     <div className="app-container">
       {showSidebar && <Sidebar />}
+
       <Routes>
-        <Route path="/" element={<BeforeLogin />} />
+        {/* <Route path="/" element={<BeforeLogin />} /> */}
+        <Route path="/" element={<IMacCanvas />} />
 
         <Route path="/clock" element={<Clock />} />
 

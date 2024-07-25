@@ -13,7 +13,7 @@ const BeforeLogin = () => {
     if (WEBGL.isWebGLAvailable()) {
       // Scene
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xeeeeee);
+      scene.background = new THREE.Color(0x000000);
 
       // Camera
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
@@ -27,16 +27,19 @@ const BeforeLogin = () => {
       document.getElementById('webgl-container').appendChild(renderer.domElement);
 
       // Lights
-      const light = new THREE.DirectionalLight(0xffffff, 1);
-      light.position.set(10, 10, 10).normalize();
+      const light = new THREE.DirectionalLight(0xffffff, 0.9);
+      const light2 = new THREE.DirectionalLight(0xffffff, 0.9);
+      light.position.set(5, 5, 5).normalize();
+      light2.position.set(3, 3, 3).normalize();
       scene.add(light);
+      scene.add(light2);
 
-      const ambientLight = new THREE.AmbientLight(0x404040);
-      scene.add(ambientLight);
+      const ambientLight = new THREE.AmbientLight(0xffffff);
+      // scene.add(ambientLight);
 
       // House materials
-      const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-      const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+      const wallMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+      const roofMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
 
       // House geometries
       const wallGeometry = new THREE.BoxGeometry(20, 10, 1);
@@ -112,7 +115,7 @@ const BeforeLogin = () => {
 
       // fix: PNG 텍스처 로드 및 배치
       const textureLoader = new THREE.TextureLoader();
-      textureLoader.load('/assets/png/zipzoom.png', (texture) => { // 경로 수정
+      textureLoader.load('/assets/png/zipzoomW.png', (texture) => { // 경로 수정
         const material = new THREE.MeshBasicMaterial({
           map: texture,
           transparent: true, // 투명도 활성화
@@ -124,7 +127,7 @@ const BeforeLogin = () => {
         // scene.add(pngMesh);
         houseGroup.add(pngMesh);
       });
-      textureLoader.load('/assets/png/clickdoor4.png', (texture) => { // 경로 수정
+      textureLoader.load('/assets/png/clickdoorW.png', (texture) => { // 경로 수정
         const material = new THREE.MeshBasicMaterial({
           map: texture,
           transparent: true, // 투명도 활성화
