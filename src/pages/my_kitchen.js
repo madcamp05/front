@@ -74,7 +74,7 @@ const MyKitchen = () => {
 
         if (intersects.length > 0) {
           const selectedObject = intersects[0].object;
-          console.log("selectedObject === ", selectedObject);
+          //console.log("selectedObject === ", selectedObject);
           if (selectedObject.name === 'Cabinet1_Door.001') {
             animateCameraToObject(selectedObject, '/kitchen/sink');
           } else if (selectedObject.name === 'Box002') {
