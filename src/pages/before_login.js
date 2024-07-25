@@ -335,7 +335,13 @@ const BeforeLogin = () => {
           document.getElementById('login-container').style.display = 'none';
 
           console.log("Navigating to /room");
-          navigate('/room'); // React Router를 사용하여 페이지 전환
+          audio.pause();
+          audio.currentTime = 0;
+
+          Promise.resolve().then(() => {
+            navigate('/room');
+          });
+
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`); s
