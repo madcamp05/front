@@ -4,7 +4,7 @@ import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 // 병 컴포넌트 생성 함수
-const createBottleComponent = (color, stickerColor) => {
+const createBottleComponent = (color, stickerColor, index) => {
   return () => {
     const bottleRef = useRef();
     const capRef = useRef();
@@ -40,7 +40,7 @@ const createBottleComponent = (color, stickerColor) => {
     // 뚜껑 애니메이션
     useFrame(() => {
       if (capOpen) {
-        capRef.current.position.y += 0.1;
+        capRef.current.position.y += 0.3; // 더 빨리 날아가도록 값 증가
         if (capRef.current.position.y > 10) {
           capRef.current.position.y = 2.9;
           setCapOpen(false); // 일정 높이 이상 올라가면 초기 위치로 리셋
@@ -48,9 +48,15 @@ const createBottleComponent = (color, stickerColor) => {
       }
     });
 
-    const handleCapClick = () => {
-      setCapOpen(!capOpen);
-    };
+    // 병 점프 애니메이션
+    useFrame(({ clock }) => {
+      const elapsedTime = clock.getElapsedTime();
+      const jumpHeight = Math.sin(elapsedTime * 2 + index) * 0.5; // 병들이 교차하며 점프하도록 설정
+      bottleRef.current.position.y = jumpHeight;
+      if (jumpHeight > 0.4 && !capOpen) {
+        setCapOpen(true); // 병이 특정 높이에 도달할 때 뚜껑이 날아가도록 설정
+      }
+    });
 
     return (
       <group ref={bottleRef}>
@@ -59,7 +65,7 @@ const createBottleComponent = (color, stickerColor) => {
           <meshStandardMaterial color={color} />
         </mesh>
         {/* 병 뚜껑 */}
-        <mesh geometry={capGeometry} position={[0, 2.9, 0]} ref={capRef} onClick={handleCapClick}>
+        <mesh geometry={capGeometry} position={[0, 2.9, 0]} ref={capRef}>
           <meshStandardMaterial color="#8B4513" />
         </mesh>
         {/* 스티커 */}
@@ -72,10 +78,10 @@ const createBottleComponent = (color, stickerColor) => {
 };
 
 // 각 병 컴포넌트 정의
-const KetchupBottle = createBottleComponent("#E32636", "white");
-const MustardBottle = createBottleComponent("#FFD700", "white");
-const ColaBottle = createBottleComponent("#2E2E2E", "white");
-const CiderBottle = createBottleComponent("#ADD8E6", "white");
+const KetchupBottle = createBottleComponent("#E32636", "white", 0);
+const MustardBottle = createBottleComponent("#FFD700", "white", 1);
+const ColaBottle = createBottleComponent("#2E2E2E", "white", 2);
+const CiderBottle = createBottleComponent("#ADD8E6", "white", 3);
 
 const MyFridge = () => {
   return (
